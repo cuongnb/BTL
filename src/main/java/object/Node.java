@@ -1,22 +1,26 @@
 package object;
 
+import jayes.BayesNet;
+import jayes.BayesNode;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by cuongnb on 11/18/16.
  */
 public class Node implements Paintable {
-
+    BayesNode node;
     String name;
     ArrayList<String> sOutcome;
-    Map<String, Double> mapOutcomes;
     ArrayList<Node> nodeParent;
+    HashMap<String, Double> mapOutcomes;
 
     private Font font = new Font("Sans Serif", Font.BOLD, 12);
     private Ellipse2D bounds;
@@ -28,6 +32,9 @@ public class Node implements Paintable {
         this.font = font;
         //Ellipse2D.Double(double x, double y, double w, double h)
         bounds = new Ellipse2D.Double(x, y, w, h);
+        sOutcome = new ArrayList<String>();
+        mapOutcomes = new HashMap<String, Double>();
+        nodeParent = new ArrayList<Node>();
     }
 
     public Node(String name, int x, int y) {
@@ -75,4 +82,18 @@ public class Node implements Paintable {
         return bounds.getBounds2D();
     }
 
+    public void setNode(BayesNet net) {
+        node = net.createNode(name);
+        String[] outcomes = new String[sOutcome.size()];
+        for (int i = 0; i < outcomes.length; i++) {
+            outcomes[i] = sOutcome.get(i);
+        }
+        node.addOutcomes(outcomes);
+        double[] values = new double[mapOutcomes.size()];
+        int i = 0;
+        for (Map.Entry<String, Double> entry : mapOutcomes.entrySet()) {
+            values[i] = entry.getValue();
+        }
+        node.setProbabilities(values);
+    }
 }

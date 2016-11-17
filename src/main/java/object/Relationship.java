@@ -1,31 +1,30 @@
 package object;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-
 /**
  * Created by cuongnb on 11/18/16.
  */
-public class Relationship implements Paintable {
-    @Override
-    public void paint(JComponent parent, Graphics2D g2d) {
+public class Relationship {
+    private Paintable parent;
+    private Paintable child;
 
+    public Relationship(Paintable parent, Paintable child) {
+        this.parent = parent;
+        this.child = child;
     }
 
-    @Override
-    public boolean contains(Point p) {
-        return false;
+    public Paintable getParent() {
+        return parent;
     }
 
-    @Override
-    public void moveTo(Point2D p) {
-
+    public void setParent(Paintable parent) {
+        this.parent = parent;
     }
 
-    @Override
-    public Rectangle2D getBounds() {
-        return null;
+    public Paintable getChild() {
+        return child;
+    }
+
+    public void setChild(Paintable child) {
+        this.child = child;
     }
 }
