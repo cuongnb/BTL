@@ -9,54 +9,52 @@ import java.awt.geom.Rectangle2D;
 /**
  * Created by cuongnb on 11/18/16.
  */
-public class Arrow implements Paintable {
+public class AddArrow implements Paintable {
     double phi;
     int barb;
-    Point tail;
     Point tip;
+    Point tail;
+    private Rectangle2D bounds;
+    private int w = 50;
+    private int h = 25;
+    Color background;
 
-    public Arrow() {
+    public AddArrow(int x, int y, Color background) {
         phi = Math.toRadians(40);
         barb = 20;
-    }
-
-    public Arrow(Point tip, Point tail) {
-        phi = Math.toRadians(40);
-        barb = 20;
+        bounds = new Rectangle2D.Double(x, y, w, h);
+        Point tip = new Point(x + 5, y + h / 2);
+        Point tail = new Point((x + w) - 5, y + h / 2);
         this.tail = tail;
         this.tip = tip;
-    }
-
-    public Arrow(Paintable parent, Paintable child) {
-        Point tip = new Point((int) parent.getBounds().getCenterX(), (int) parent.getBounds().getCenterY());
-        Point tail = new Point((int) child.getBounds().getCenterX(), (int) child.getBounds().getY());
-        phi = Math.toRadians(40);
-        barb = 20;
-        this.tail = tail;
-        this.tip = tip;
+        this.background = background;
     }
 
     @Override
     public void paint(JComponent parent, Graphics2D g2) {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.draw(new Line2D.Double(tip, tail));
-        drawArrowHead(g2, tail, tip, Color.blue);
+        g2.setColor(background);
+        g2.fill3DRect((int) bounds.getX() - 5, (int) bounds.getY() - 5, (int) bounds.getWidth() + 10, (int) bounds.getHeight() + 10, true);
+
+        g2.setColor(Color.BLACK);
+        g2.draw(new Line2D.Double(tail, tip));
+        drawArrowHead(g2, tail, tip, Color.BLACK);
     }
 
     @Override
     public boolean contains(Point p) {
-        return false;
+        return bounds.contains(p);
     }
 
     @Override
     public void moveTo(Point2D p) {
-
+        bounds = new Rectangle2D.Double(p.getX(), p.getY(), w, h);
     }
 
     @Override
     public Rectangle2D getBounds() {
-        return null;
+        return bounds.getBounds2D();
     }
 
     private void drawArrowHead(Graphics2D g2, Point tip, Point tail, Color color) {
@@ -74,19 +72,11 @@ public class Arrow implements Paintable {
         }
     }
 
-    public Point getTail() {
-        return tail;
+    public Color getBackground() {
+        return background;
     }
 
-    public void setTail(Point tail) {
-        this.tail = tail;
-    }
-
-    public Point getTip() {
-        return tip;
-    }
-
-    public void setTip(Point tip) {
-        this.tip = tip;
+    public void setBackground(Color background) {
+        this.background = background;
     }
 }
