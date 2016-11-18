@@ -31,6 +31,11 @@ public class Main extends JPanel implements ActionListener {
     Point pointStart = null;
     Point pointEnd = null;
     Arrow arrow = new Arrow();
+//
+//    JList listModel = new DefaultListModel();
+//    listModel.addElement("Jane Doe");
+//    listModel.addElement("John Smith");
+//    listModel.addElement("Kathy Green");
 
     public Main() {
 
@@ -66,8 +71,7 @@ public class Main extends JPanel implements ActionListener {
                         // prompt the user to enter their name
                         String name = JOptionPane.showInputDialog(frame, "What's your name?");
                         // get the user's input. note that if they press Cancel, 'name' will be null
-                        System.out.printf("The user's name is '%s'.\n", name);
-
+//                        System.out.printf("The user's name is '%s'.\n", name);
 
                         addNode.setBackground(Color.RED);
                         Node newNode = new Node(name, baseFont, 10, 60);
@@ -82,10 +86,16 @@ public class Main extends JPanel implements ActionListener {
                             addArrow.setBackground(Color.RED);
                         }
                     }
-                    System.out.println("Detect Mouse Left Click");
+//                    System.out.println("Detect Mouse Left Click");
 
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
-                    System.out.println("Detect Mouse Right Click");
+//                    System.out.println("Detect Mouse Right Click");
+                    ListControl listControl = new ListControl();
+                    listControl.setLocation(e.getLocationOnScreen());
+                    listControl.setSize(100, 100);
+                    listControl.setResizable(true);
+                    listControl.pack();
+                    listControl.setVisible(true);
                 }
 
                 for (int i = 0; i < nodes.size(); i++) {
@@ -103,17 +113,17 @@ public class Main extends JPanel implements ActionListener {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                System.out.println("Mouse Cursor Coordinates => X:" + e.getX() + " |Y:" + e.getY());
+//                System.out.println("Mouse Cursor Coordinates => X:" + e.getX() + " |Y:" + e.getY());
                 Paintable nodeStart = null;
                 Paintable nodeEnd = null;
                 if (pointStart != null && pointEnd != null) {
                     for (Paintable p : nodes) {
                         if (p.contains(pointStart)) {
-                            System.out.println("point start");
+//                            System.out.println("point start");
                             nodeStart = p;
                         }
                         if (p.contains(pointEnd)) {
-                            System.out.println("pont end");
+//                            System.out.println("pont end");
                             nodeEnd = p;
                         }
                     }

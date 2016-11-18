@@ -18,7 +18,8 @@ public class GroupableTableHeader extends JTableHeader {
         setUI(new GroupableTableHeaderUI());
         setReorderingAllowed(false);
     }
-    public void updateUI(){
+
+    public void updateUI() {
         setUI(new GroupableTableHeaderUI());
     }
 
@@ -37,8 +38,8 @@ public class GroupableTableHeader extends JTableHeader {
         if (columnGroups == null) return null;
         Enumeration e = columnGroups.elements();
         while (e.hasMoreElements()) {
-            ColumnGroup cGroup = (ColumnGroup)e.nextElement();
-            Vector v_ret = (Vector)cGroup.getColumnGroups(col,new Vector());
+            ColumnGroup cGroup = (ColumnGroup) e.nextElement();
+            Vector v_ret = (Vector) cGroup.getColumnGroups(col, new Vector());
             if (v_ret != null) {
                 return v_ret.elements();
             }
@@ -51,7 +52,7 @@ public class GroupableTableHeader extends JTableHeader {
         int columnMargin = getColumnModel().getColumnMargin();
         Enumeration e = columnGroups.elements();
         while (e.hasMoreElements()) {
-            ColumnGroup cGroup = (ColumnGroup)e.nextElement();
+            ColumnGroup cGroup = (ColumnGroup) e.nextElement();
             cGroup.setColumnMargin(columnMargin);
         }
     }
