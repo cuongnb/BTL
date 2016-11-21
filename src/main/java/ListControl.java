@@ -1,3 +1,5 @@
+import object.Node;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -10,10 +12,13 @@ public class ListControl extends JFrame
         implements ListSelectionListener {
     private JList list;
     private DefaultListModel listModel;
+    private String[] columnNames;
+    private Object[][] data;
 
     public ListControl() {
 //        super(new BorderLayout());
         listModel = new DefaultListModel();
+        listModel.addElement("Select Option");
         listModel.addElement("Rename");
         listModel.addElement("Add Outcome");
         listModel.addElement("Add Probabilities");
@@ -56,6 +61,8 @@ public class ListControl extends JFrame
         this.dispose();
         switch (index) {
             case 0:
+                break;
+            case 1:
                 // a jframe here isn't strictly necessary, but it makes the example a little more real
                 JFrame frame = new JFrame("InputDialog Example #1");
                 // prompt the user to enter their name
@@ -63,11 +70,19 @@ public class ListControl extends JFrame
                 // get the user's input. note that if they press Cancel, 'name' will be null
                 System.out.printf("The user's name is '%s'.\n", name);
                 break;
-            case 1:
+            case 2:
                 ListOutcome.createAndShowGUI();
                 break;
 
-            case 2:
+            case 3:
+                if (ProjectManagement.currentNode.sOutcome.size() > 0) {
+                    if (setOutcome()) {
+
+                    }
+                } else {
+                    JFrame frame1 = new JFrame("InputDialog Example #1");
+                    JOptionPane.showMessageDialog(frame1, "vui long nhap outcome truoc!");
+                }
                 break;
 
         }
@@ -75,31 +90,24 @@ public class ListControl extends JFrame
     }
 
 
-    /**
-     * Create the GUI and show it.  For thread safety,
-     * this method should be invoked from the
-     * event-dispatching thread.
-     */
-//    public static void createAndShowGUI() {
-//        //Create and set up the window.
-//        JFrame frame = new JFrame("Add OutCome");
-////        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//
-//        //Create and set up the content pane.
-//        JComponent newContentPane = new ListControl();
-//        newContentPane.setOpaque(true); //content panes must be opaque
-//        frame.setContentPane(newContentPane);
-//
-//        frame.setLocationRelativeTo(null);
-//        //Display the window.
-//        frame.pack();
-//        frame.setVisible(true);
-//    }
-//    public static void main(String[] args) {
-//        ListControl listControl = new ListControl();
-//        listControl.setSize(100, 100);
-//        listControl.setResizable(true);
-//        listControl.pack();
-//        listControl.setVisible(true);
-//    }
+    public boolean setOutcome() {
+        int numColumn = ProjectManagement.currentNode.sOutcome.size();
+        for (Node node : ProjectManagement.currentNode.nodeParent) {
+            if (node.sOutcome.size() > 0) {
+                numColumn *= node.sOutcome.size();
+            } else {
+                JFrame frame1 = new JFrame("InputDialog Example #1");
+                JOptionPane.showMessageDialog(frame1, "vui long nhap outcome truoc!");
+                return false;
+            }
+        }
+        Node lastNode = ProjectManagement.currentNode.nodeParent.get(ProjectManagement.currentNode.nodeParent.size() - 1);
+        int n = lastNode.sOutcome.size();
+        String[] column = new String[numColumn];
+        for (int i = 0; i < numColumn; i++) {
+            column[i] = lastNode.sOutcome.get(i % n);
+            System.out.println(lastNode.sOutcome.get(i % n));
+        }
+        return true;
+    }
 }

@@ -10,7 +10,6 @@ import java.awt.*;
  */
 public class TableDemo extends JPanel {
     private boolean DEBUG = true;
-    private static DefaultTableModel dm = new DefaultTableModel();
     private String[] columnNames = {"First Name",
             "Last Name",
             "Sport",
@@ -50,7 +49,6 @@ public class TableDemo extends JPanel {
     }
 
     class MyTableModel extends AbstractTableModel {
-
 
         public int getColumnCount() {
             return columnNames.length;
@@ -146,16 +144,40 @@ public class TableDemo extends JPanel {
         //Display the window.
         frame.pack();
         frame.setVisible(true);
+
     }
 
     public static void main(String[] args) {
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
+//        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+//            public void run() {
+//                createAndShowGUI();
+//            }
+//        });
+
+
+        String[] columnNames = {"First Name",
+                "Last Name",
+                "Sport",
+                "# of Years",
+                "Vegetarian"};
+
+        Object[][] data = {
+                {"Kathy", "Smith",
+                        "Snowboarding", new Integer(5), new Boolean(false)},
+                {"John", "Doe",
+                        "Rowing", new Integer(3), new Boolean(true)},
+                {"Sue", "Black",
+                        "Knitting", new Integer(2), new Boolean(false)},
+                {"Jane", "White",
+                        "Speed reading", new Integer(20), new Boolean(true)},
+                {"Joe", "Brown",
+                        "Pool", new Integer(10), new Boolean(false)}
+        };
+
+//        Table.createAndShowGUI(columnNames, data);
+
     }
 }
 

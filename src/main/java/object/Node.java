@@ -16,11 +16,13 @@ import java.util.Map;
  * Created by cuongnb on 11/18/16.
  */
 public class Node implements Paintable {
-    BayesNode node;
-    String name;
-    ArrayList<String> sOutcome;
-    ArrayList<Node> nodeParent;
-    HashMap<String, Double> mapOutcomes;
+    public BayesNode node;
+    public String name;
+    public ArrayList<String> sOutcome;
+    public ArrayList<Node> nodeParent;
+    public ArrayList<Node> nodeChild;
+    public ArrayList<Double> probabilities;
+
 
     private Font font = new Font("Sans Serif", Font.BOLD, 12);
     private Ellipse2D bounds;
@@ -33,8 +35,8 @@ public class Node implements Paintable {
         //Ellipse2D.Double(double x, double y, double w, double h)
         bounds = new Ellipse2D.Double(x, y, w, h);
         sOutcome = new ArrayList<String>();
-        mapOutcomes = new HashMap<String, Double>();
         nodeParent = new ArrayList<Node>();
+        nodeChild = new ArrayList<>();
     }
 
     public Node(String name, int x, int y) {
@@ -84,15 +86,17 @@ public class Node implements Paintable {
 
     public void setNode(BayesNet net) {
         node = net.createNode(name);
+
         String[] outcomes = new String[sOutcome.size()];
         for (int i = 0; i < outcomes.length; i++) {
             outcomes[i] = sOutcome.get(i);
         }
         node.addOutcomes(outcomes);
-        double[] values = new double[mapOutcomes.size()];
+
+        double[] values = new double[probabilities.size()];
         int i = 0;
-        for (Map.Entry<String, Double> entry : mapOutcomes.entrySet()) {
-            values[i] = entry.getValue();
+        for (double value : probabilities) {
+            values[i] = value;
         }
         node.setProbabilities(values);
     }

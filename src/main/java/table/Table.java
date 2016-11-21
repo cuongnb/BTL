@@ -1,16 +1,22 @@
 package table;
 
 import javax.swing.*;
-import javax.swing.table.*;
-import java.awt.event.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
- * Created by cuongnb on 11/18/16.
+ * Created by cuongnb on 11/21/16.
  */
-public class Test extends JFrame {
+public class Table extends JFrame {
 
 
-    Test() {
+    Table() {
         super("Groupable Header Example");
         Object[][] objects1 = new Object[2][6];
         for (int m = 0; m < objects1.length; m++) {
@@ -53,10 +59,6 @@ public class Test extends JFrame {
                 System.out.println("cuongnb");
                 System.out.println(table.getEditingColumn());
 
-
-//                table.getColumnModel();
-//                table.getEditingColumn();
-//                System.out.println(table.getColumnModel().getColumn(0).get);
                 TableModel tb = table.getModel();
                 Object o = tb.getValueAt(1, 0);
                 String s = (String) o;
@@ -68,7 +70,7 @@ public class Test extends JFrame {
 
 
     public static void main(String[] args) {
-        Test frame = new Test();
+        Table frame = new Table();
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 System.exit(0);

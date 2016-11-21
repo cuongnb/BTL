@@ -4,10 +4,10 @@ package object;
  * Created by cuongnb on 11/18/16.
  */
 public class Relationship {
-    private Paintable parent;
-    private Paintable child;
+    private Node parent;
+    private Node child;
 
-    public Relationship(Paintable parent, Paintable child) {
+    public Relationship(Node parent, Node child) {
         this.parent = parent;
         this.child = child;
     }
@@ -16,7 +16,7 @@ public class Relationship {
         return parent;
     }
 
-    public void setParent(Paintable parent) {
+    public void setParent(Node parent) {
         this.parent = parent;
     }
 
@@ -24,7 +24,7 @@ public class Relationship {
         return child;
     }
 
-    public void setChild(Paintable child) {
+    public void setChild(Node child) {
         this.child = child;
     }
 }

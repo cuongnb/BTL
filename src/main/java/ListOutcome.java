@@ -117,10 +117,12 @@ public class ListOutcome extends JPanel
 
                 for (int i = 0; i < listModel.size(); i++) {
                     System.out.println(listModel.get(i).toString());
+                    ProjectManagement.currentNode.sOutcome.add(listModel.get(i).toString());
                 }
             } else {
                 okButton.setEnabled(false);
             }
+
         }
     }
 

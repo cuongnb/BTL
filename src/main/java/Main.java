@@ -5,13 +5,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by cuongnb on 11/18/16.
  */
 public class Main extends JPanel implements ActionListener {
-
+    public boolean DEBUG = true;
     ArrayList<Paintable> controls = new ArrayList<>();
     private boolean isClickAddArrow = false;
 
@@ -31,11 +30,7 @@ public class Main extends JPanel implements ActionListener {
     Point pointStart = null;
     Point pointEnd = null;
     Arrow arrow = new Arrow();
-//
-//    JList listModel = new DefaultListModel();
-//    listModel.addElement("Jane Doe");
-//    listModel.addElement("John Smith");
-//    listModel.addElement("Kathy Green");
+
 
     public Main() {
 
@@ -56,9 +51,6 @@ public class Main extends JPanel implements ActionListener {
         this.setFont(baseFont);
         this.addMouseListener(new MouseAdapter() {
 
-            Date pressedTime;
-            long timeClicked;
-
             @Override
             public void mousePressed(MouseEvent e) {
 
@@ -69,7 +61,7 @@ public class Main extends JPanel implements ActionListener {
                         // a jframe here isn't strictly necessary, but it makes the example a little more real
                         JFrame frame = new JFrame("InputDialog Example #1");
                         // prompt the user to enter their name
-                        String name = JOptionPane.showInputDialog(frame, "What's your name?");
+                        String name = JOptionPane.showInputDialog(frame, "node name?");
                         // get the user's input. note that if they press Cancel, 'name' will be null
 //                        System.out.printf("The user's name is '%s'.\n", name);
 
@@ -89,35 +81,49 @@ public class Main extends JPanel implements ActionListener {
 //                    System.out.println("Detect Mouse Left Click");
 
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
-//                    System.out.println("Detect Mouse Right Click");
-                    ListControl listControl = new ListControl();
-                    listControl.setLocation(e.getLocationOnScreen());
-                    listControl.setSize(100, 100);
-                    listControl.setResizable(true);
-                    listControl.pack();
-                    listControl.setVisible(true);
-                }
 
-                for (int i = 0; i < nodes.size(); i++) {
-                    Paintable p = nodes.get(i);
-                    if (p.contains(e.getPoint())) {
-                        // select
-                        selectedShape = p;
-                        offset = new Point2D.Double(e.getX() - p.getBounds().getX(), e.getY() - p.getBounds().getY());
+                    for (int i = 0; i < nodes.size(); i++) {
+                        if (nodes.get(i).contains(e.getPoint())) {
+                            // System.out.println("Detect Mouse Right Click");
 
+                            ProjectManagement.currentNode = nodes.get(i);
+                            if (DEBUG) {
+                                System.out.println(ProjectManagement.currentNode.name);
+                                System.out.println("number of outcome: " + ProjectManagement.currentNode.sOutcome.size());
+                                System.out.println("number of parent: " + ProjectManagement.currentNode.nodeParent.size());
+                            }
+                            ListControl listControl = new ListControl();
+                            listControl.setLocation(e.getLocationOnScreen());
+                            listControl.setSize(100, 100);
+                            listControl.setResizable(true);
+                            listControl.pack();
+                            listControl.setVisible(true);
+                            break;
+                        }
                     }
                 }
-                pointStart = e.getPoint();
+
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    for (int i = 0; i < nodes.size(); i++) {
+                        Paintable p = nodes.get(i);
+                        if (p.contains(e.getPoint())) {
+                            // select
+                            selectedShape = p;
+                            offset = new Point2D.Double(e.getX() - p.getBounds().getX(), e.getY() - p.getBounds().getY());
+                        }
+                    }
+                    pointStart = e.getPoint();
+                }
                 repaint();
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
 //                System.out.println("Mouse Cursor Coordinates => X:" + e.getX() + " |Y:" + e.getY());
-                Paintable nodeStart = null;
-                Paintable nodeEnd = null;
+                Node nodeStart = null;
+                Node nodeEnd = null;
                 if (pointStart != null && pointEnd != null) {
-                    for (Paintable p : nodes) {
+                    for (Node p : nodes) {
                         if (p.contains(pointStart)) {
 //                            System.out.println("point start");
                             nodeStart = p;
@@ -127,8 +133,17 @@ public class Main extends JPanel implements ActionListener {
                             nodeEnd = p;
                         }
                     }
-                    if (nodeEnd != null && nodeStart != null) {
+                    if (nodeEnd != null && nodeStart != null && nodeEnd != nodeStart) {
                         relationships.add(new Relationship(nodeStart, nodeEnd));
+                        nodeStart.nodeChild.add(nodeEnd);
+                        nodeEnd.nodeParent.add(nodeStart);
+
+                        if (DEBUG) {
+                            for (Node node : nodeEnd.nodeParent) {
+                                System.out.println(node.name);
+                            }
+                        }
+
                     }
                 }
                 addNode.setBackground(Color.WHITE);
