@@ -18,6 +18,7 @@ public class Node implements Paintable {
     public BayesNode node;
     public String name;
     public ArrayList<String> sOutcome;
+    public double[] outcomeValues;
     public ArrayList<Node> nodeParent;
     public ArrayList<Node> nodeChild;
     public Object[][] data;
@@ -87,7 +88,7 @@ public class Node implements Paintable {
 
     public void setNode(BayesNet net) {
         node = net.createNode(name);
-
+        System.out.println(name + "\n");
         String[] outcomes = new String[sOutcome.size()];
         for (int i = 0; i < outcomes.length; i++) {
             outcomes[i] = sOutcome.get(i);
@@ -108,8 +109,10 @@ public class Node implements Paintable {
         int column = 0;
         for (i = 0; i < values.length; i++) {
             row = i % data.length;
-            column = i / data[0].length;
+            column = i / data.length;
+//            System.out.println(row + " -- " + column);
             values[i] = Double.parseDouble((String) data[row][column + 1]);
+            System.out.print(values[i] + "\t");
         }
         node.setProbabilities(values);
     }
@@ -127,6 +130,10 @@ public class Node implements Paintable {
             }
         }
         System.out.println("number data: " + data.length * data[0].length);
+    }
+
+    public void setValueOutcomes(double[] result) {
+        outcomeValues = result;
     }
 
     public void setsColumns(String[] sColumns) {

@@ -52,12 +52,12 @@ public class Test {
         c.setProbabilities(
                 /* a == true*/
                 0.1, 0.9, /* b == one*/
-                0.2, 0.8, /* b == two*/
+                0.8, 0.2, /* b == two*/
                 0.5, 0.5,/* b == three*/
                 /* a == false*/
-                0.2, 0.8, /* b == one*/
-                0.0, 1.0,/*  b == two*/
-                0.7, 0.3 /* b == three*/
+                0.7, 0.3, /* b == one*/
+                0.6, 0.4,/*  b == two*/
+                0.3, 0.7 /* b == three*/
         );
 
 
@@ -69,7 +69,7 @@ public class Test {
 //        evidence.put(b, "three");
         inferer.setEvidence(evidence);
 
-        double[] beliefsC = inferer.getBeliefs(a);
+        double[] beliefsC = inferer.getBeliefs(b);
 
         System.out.println(beliefsC[0] + " ---- " + beliefsC[1]);
         algo.getFactory().setFloatingPointType(float.class);

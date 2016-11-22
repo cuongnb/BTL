@@ -1,5 +1,6 @@
 import object.Node;
-import table.Table;
+import table.*;
+import table.ViewNode;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -13,18 +14,24 @@ public class ListControl extends JFrame
         implements ListSelectionListener {
     private JList list;
     private DefaultListModel listModel;
-    private String[] columnNames;
-    private Object[][] data;
     private Point point;
+    private boolean isRun = false;
 
-    public ListControl(Point point) {
+    public ListControl(Point point, boolean isRun) {
 //        super(new BorderLayout());
+        this.isRun = isRun;
         this.point = point;
         listModel = new DefaultListModel();
-        listModel.addElement("Select Option");
-        listModel.addElement("Rename");
-        listModel.addElement("Add Outcome");
-        listModel.addElement("Add Probabilities");
+
+        if (isRun) {
+            listModel.addElement("....");
+            listModel.addElement("View probabilities");
+        } else {
+            listModel.addElement("Select Option");
+            listModel.addElement("Rename");
+            listModel.addElement("Add Outcome");
+            listModel.addElement("Add Probabilities");
+        }
 
         //Create the list and put it in a scroll pane.
         list = new JList(listModel);
@@ -62,33 +69,46 @@ public class ListControl extends JFrame
         int index = listSelectionEvent.getLastIndex();
         System.out.println(index);
         this.dispose();
-        switch (index) {
-            case 0:
-                break;
-            case 1:
-                // a jframe here isn't strictly necessary, but it makes the example a little more real
-                JFrame frame = new JFrame("InputDialog Example #1");
-                // prompt the user to enter their name
-                String name = JOptionPane.showInputDialog(frame, "What's your name?");
-                // get the user's input. note that if they press Cancel, 'name' will be null
-                System.out.printf("The user's name is '%s'.\n", name);
-                break;
-            case 2:
-                ListOutcome.createAndShowGUI(point);
-                break;
+        if (isRun) {
+            switch (index) {
+                case 0:
+                    break;
+                case 1:
+                    ViewNode frame = new ViewNode(ProjectManagement.currentNode);
+                    frame.setVisible(true);
+                    break;
+            }
+        } else {
 
-            case 3:
-                if (ProjectManagement.currentNode.sOutcome.size() > 0) {
-                    if (setOutcome()) {
-                        Table table = new Table(ProjectManagement.currentNode);
-                        table.setLocation(point);
-                        table.setVisible(true);
+            switch (index) {
+                case 0:
+                    break;
+                case 1:
+                    // a jframe here isn't strictly necessary, but it makes the example a little more real
+                    JFrame frame = new JFrame("InputDialog Example #1");
+                    // prompt the user to enter their name
+                    String name = JOptionPane.showInputDialog(frame, "Node name?");
+                    // get the user's input. note that if they press Cancel, 'name' will be null
+                    System.out.printf("The user's name is '%s'.\n", name);
+                    ProjectManagement.currentNode.name = name;
+                    break;
+                case 2:
+                    ListOutcome.createAndShowGUI(point);
+                    break;
+
+                case 3:
+                    if (ProjectManagement.currentNode.sOutcome.size() > 0) {
+                        if (setOutcome()) {
+                            Table table = new Table(ProjectManagement.currentNode);
+                            table.setLocation(point);
+                            table.setVisible(true);
+                        }
+                    } else {
+                        JFrame frame1 = new JFrame("InputDialog Example #1");
+                        JOptionPane.showMessageDialog(frame1, "vui long nhap outcome truoc!");
                     }
-                } else {
-                    JFrame frame1 = new JFrame("InputDialog Example #1");
-                    JOptionPane.showMessageDialog(frame1, "vui long nhap outcome truoc!");
-                }
-                break;
+                    break;
+            }
         }
 
     }

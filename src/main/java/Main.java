@@ -75,7 +75,6 @@ public class Main extends JPanel implements ActionListener {
                 if (e.getButton() == MouseEvent.BUTTON1) {
 
                     if (addNode.contains(e.getPoint())) {
-
                         // a jframe here isn't strictly necessary, but it makes the example a little more real
                         JFrame frame = new JFrame("InputDialog Example #1");
                         // prompt the user to enter their name
@@ -96,20 +95,6 @@ public class Main extends JPanel implements ActionListener {
                             addArrow.setBackground(Color.RED);
                         }
                     }
-
-                    if (isRun) {
-                        if (run.contains(e.getPoint())) {
-                            ProjectManagement.currentNode.background = Color.RED;
-                            System.out.println(ProjectManagement.currentNode.name);
-                            Map<BayesNode, String> evidence = new HashMap<BayesNode, String>();
-                            inferer.setEvidence(evidence);
-                            double[] beliefsC = inferer.getBeliefs(ProjectManagement.currentNode.node);
-                            for (int i = 0; i < ProjectManagement.currentNode.sOutcome.size(); i++) {
-                                System.out.println(ProjectManagement.currentNode.sOutcome.get(i) + " : " + beliefsC[i]);
-                            }
-                        }
-                    }
-
                     if (setBayes.contains(e.getPoint())) {
                         net = new BayesNet();
                         inferer = new JunctionTreeAlgorithm();
@@ -118,8 +103,6 @@ public class Main extends JPanel implements ActionListener {
                         }
                         inferer.setNetwork(net);
                     }
-
-                } else if (e.getButton() == MouseEvent.BUTTON2) {
                     if (run.contains(e.getPoint())) {
                         if (isRun) {
                             run.setBackground(Color.BLUE);
@@ -129,7 +112,6 @@ public class Main extends JPanel implements ActionListener {
                             isRun = true;
                         }
                     }
-
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
 
                     for (int i = 0; i < nodes.size(); i++) {
@@ -140,7 +122,20 @@ public class Main extends JPanel implements ActionListener {
                             if (DEBUG) {
                                 System.out.println(ProjectManagement.currentNode.toString());
                             }
-                            ListControl listControl = new ListControl(e.getLocationOnScreen());
+
+                            if (isRun) {
+                                ProjectManagement.currentNode.background = Color.RED;
+                                System.out.println(ProjectManagement.currentNode.name);
+                                Map<BayesNode, String> evidence = new HashMap<BayesNode, String>();
+                                inferer.setEvidence(evidence);
+                                double[] beliefsC = inferer.getBeliefs(ProjectManagement.currentNode.node);
+                                ProjectManagement.currentNode.setValueOutcomes(beliefsC);
+                                for (int n = 0; n < ProjectManagement.currentNode.sOutcome.size(); n++) {
+                                    System.out.println(ProjectManagement.currentNode.sOutcome.get(n) + " : " + beliefsC[n]);
+                                }
+                            }
+
+                            ListControl listControl = new ListControl(e.getLocationOnScreen(), isRun);
                             listControl.setLocation(e.getLocationOnScreen());
                             listControl.setSize(100, 100);
                             listControl.setResizable(true);
