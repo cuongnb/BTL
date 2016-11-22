@@ -1,7 +1,5 @@
 package object;
 
-import org.w3c.dom.css.Rect;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;

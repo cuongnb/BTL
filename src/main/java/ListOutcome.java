@@ -229,7 +229,7 @@ public class ListOutcome extends JPanel
      * this method should be invoked from the
      * event-dispatching thread.
      */
-    public static void createAndShowGUI() {
+    public static void createAndShowGUI(Point point) {
         //Create and set up the window.
         JFrame frame = new JFrame("Add OutCome");
 //        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -238,6 +238,7 @@ public class ListOutcome extends JPanel
         JComponent newContentPane = new ListOutcome();
         newContentPane.setOpaque(true); //content panes must be opaque
         frame.setContentPane(newContentPane);
+        frame.setLocation(point);
 
         //Display the window.
         frame.pack();

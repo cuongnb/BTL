@@ -8,9 +8,8 @@ import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by cuongnb on 11/18/16.
@@ -21,7 +20,9 @@ public class Node implements Paintable {
     public ArrayList<String> sOutcome;
     public ArrayList<Node> nodeParent;
     public ArrayList<Node> nodeChild;
-    public ArrayList<Double> probabilities;
+    public Object[][] data;
+    public String[] sColumns;
+    public Color background = Color.WHITE;
 
 
     private Font font = new Font("Sans Serif", Font.BOLD, 12);
@@ -57,7 +58,7 @@ public class Node implements Paintable {
         FontMetrics fm = g2.getFontMetrics();
         int height = fm.getHeight();
         int width = fm.stringWidth(name);
-        g2.setColor(Color.WHITE);
+        g2.setColor(background);
         g2.fill(bounds);
         g2.setColor(Color.BLACK);
         g2.draw(bounds);
@@ -92,12 +93,103 @@ public class Node implements Paintable {
             outcomes[i] = sOutcome.get(i);
         }
         node.addOutcomes(outcomes);
+        if (nodeParent.size() > 0) {
+            List<BayesNode> bayesNodes = new ArrayList<>();
+            for (Node node : nodeParent) {
+                bayesNodes.add(node.node);
+            }
+            node.setParents(bayesNodes);
+        }
 
-        double[] values = new double[probabilities.size()];
+        // -1 tru cho column chua sOutcome
+        double[] values = new double[(sOutcome.size()) * (sColumns.length - 1)];
         int i = 0;
-        for (double value : probabilities) {
-            values[i] = value;
+        int row = 0;
+        int column = 0;
+        for (i = 0; i < values.length; i++) {
+            row = i % data.length;
+            column = i / data[0].length;
+            values[i] = Double.parseDouble((String) data[row][column + 1]);
         }
         node.setProbabilities(values);
+    }
+
+    public void setData() {
+
+        data = new Object[sOutcome.size()][sColumns.length];
+        for (int m = 0; m < sOutcome.size(); m++) {
+            for (int n = 0; n < sColumns.length; n++) {
+                if (n == 0) {
+                    data[m][n] = sOutcome.get(m);
+                } else {
+                    data[m][n] = "";
+                }
+            }
+        }
+        System.out.println("number data: " + data.length * data[0].length);
+    }
+
+    public void setsColumns(String[] sColumns) {
+        this.sColumns = sColumns;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "node=" + node +
+                ", name='" + name + '\'' +
+                ", sOutcome=" + sOutcome + "\n" +
+                ", nodeParent=" + printParent() + "\n" +
+                ", nodeChild=" + printChild() + "\n" +
+                ", data=" + "\n" + printData() + "\n" +
+                ", sColumns=" + Arrays.toString(sColumns) + "\n" +
+                '}';
+    }
+
+    public String printParent() {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("[ ");
+        if (nodeParent.size() > 0) {
+            for (Node node : nodeParent) {
+                buffer.append(node.name + " ");
+            }
+        }
+        buffer.append(" ] ");
+        return buffer.toString();
+    }
+
+    public String printChild() {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("[ ");
+        if (nodeChild.size() > 0) {
+            for (Node node : nodeChild) {
+                buffer.append(node.name + " ");
+            }
+        }
+        buffer.append(" ]");
+        return buffer.toString();
+    }
+
+    public String printData() {
+        StringBuffer buffer = new StringBuffer();
+        if (data != null) {
+            for (int m = 0; m < data.length; m++) {
+                for (int n = 1; n < data[0].length; n++) {
+                    buffer.append(data[m][n] + " ");
+                }
+                buffer.append("\n");
+            }
+        } else {
+            return "[]";
+        }
+        return buffer.toString();
     }
 }

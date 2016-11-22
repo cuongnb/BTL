@@ -1,5 +1,7 @@
 package table;
 
+import object.Node;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -7,8 +9,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
 /**
  * Created by cuongnb on 11/21/16.
@@ -16,18 +17,12 @@ import java.awt.event.WindowEvent;
 public class Table extends JFrame {
 
 
-    Table() {
+    public Table(Node currentNode) {
         super("Groupable Header Example");
-        Object[][] objects1 = new Object[2][6];
-        for (int m = 0; m < objects1.length; m++) {
-            for (int n = 0; n < objects1[0].length; n++) {
-                objects1[m][n] = n + " " + m;
-            }
-        }
-        DefaultTableModel dm = new DefaultTableModel();
-        dm.setDataVector(objects1,
-                new Object[]{"SNo.", "1", "2", "Native", "2", "3"});
 
+        DefaultTableModel dm = new DefaultTableModel();
+        dm.setDataVector(currentNode.data, currentNode.sColumns);
+        System.out.println("data: " + currentNode.data.length * currentNode.data[0].length + " column: " + currentNode.sColumns.length);
         JTable table = new JTable(dm) {
             protected JTableHeader createDefaultTableHeader() {
                 return new GroupableTableHeader(columnModel);
@@ -35,22 +30,69 @@ public class Table extends JFrame {
         };
 
         TableColumnModel cm = table.getColumnModel();
-        ColumnGroup g_name = new ColumnGroup("Name");
-        g_name.add(cm.getColumn(1));
-        g_name.add(cm.getColumn(2));
-        ColumnGroup g_lang = new ColumnGroup("Language");
-        g_lang.add(cm.getColumn(3));
-        ColumnGroup g_other = new ColumnGroup("Others");
-        g_other.add(cm.getColumn(4));
-        g_other.add(cm.getColumn(5));
-        g_lang.add(g_other);
-
         GroupableTableHeader header = (GroupableTableHeader) table.getTableHeader();
-        header.addColumnGroup(g_name);
-        header.addColumnGroup(g_lang);
+
+        if (currentNode.nodeParent.size() > 1) {
+
+            // khoi tao arraylist
+            ArrayList<ColumnGroup[]> columnGroups = new ArrayList<>();
+            int column = 1;
+            for (int i = 0; i < currentNode.nodeParent.size() - 1; i++) {
+                column *= currentNode.nodeParent.get(i).sOutcome.size();
+                columnGroups.add(new ColumnGroup[column]);
+                System.out.println("line " + i + " is: " + column);
+            }
+
+            // name for header
+            for (int i = 0; i < currentNode.nodeParent.size() - 1; i++) {
+                for (int j = 0; j < columnGroups.get(i).length; j++) {
+                    Node node = currentNode.nodeParent.get(i);
+                    int numOutcomeNode = node.sOutcome.size();
+                    columnGroups.get(i)[j] = new ColumnGroup(node.sOutcome.get(j % numOutcomeNode));
+                    System.out.print(node.sOutcome.get(j % numOutcomeNode) + "\t");
+                }
+                System.out.println("");
+            }
+
+            // add head have relationship
+            for (int i = 0; i < currentNode.nodeParent.size() - 1; i++) {
+                if (i < currentNode.nodeParent.size() - 2) {
+                    int numNextOutcome = currentNode.nodeParent.get(i + 1).sOutcome.size();
+                    int n = 0;
+                    int index = 0;
+                    for (int j = 0; j < columnGroups.get(i).length; j++) {
+                        for (; n < columnGroups.get(i + 1).length; n++) {
+                            columnGroups.get(i)[j].add(columnGroups.get(i + 1)[n]);
+                            index++;
+                            if (index == numNextOutcome) {
+                                index = 0;
+                                n++;
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    int index = 0;
+                    int count = 0;
+                    int numLastOutcome = currentNode.nodeParent.get(currentNode.nodeParent.size() - 1).sOutcome.size();
+                    for (int j = 1; j < currentNode.sColumns.length; j++) {
+                        columnGroups.get(i)[index].add(cm.getColumn(j));
+                        count++;
+                        if (count == numLastOutcome) {
+                            index++;
+                            count = 0;
+                        }
+                    }
+                }
+            }
+
+            for (ColumnGroup group : columnGroups.get(0)) {
+                header.addColumnGroup(group);
+            }
+        }
         JScrollPane scroll = new JScrollPane(table);
         getContentPane().add(scroll);
-        setSize(400, 120);
+        setSize(400, 220);
 
 
         header.addMouseListener(new MouseAdapter() {
@@ -60,23 +102,23 @@ public class Table extends JFrame {
                 System.out.println(table.getEditingColumn());
 
                 TableModel tb = table.getModel();
-                Object o = tb.getValueAt(1, 0);
-                String s = (String) o;
-                System.out.println(s);
+
+
+                for (int m = 0; m < currentNode.sOutcome.size(); m++) {
+                    for (int n = 0; n < currentNode.sColumns.length; n++) {
+                        if (n == 0) {
+                            continue;
+                        } else {
+                            Object o = tb.getValueAt(m, n);
+                            String s = (String) o;
+                            currentNode.data[m][n] = s;
+                            System.out.print(s + "\t");
+                        }
+                    }
+                    System.out.println("");
+                }
             }
         });
 
     }
-
-
-    public static void main(String[] args) {
-        Table frame = new Table();
-        frame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                System.exit(0);
-            }
-        });
-        frame.setVisible(true);
-    }
-
 }

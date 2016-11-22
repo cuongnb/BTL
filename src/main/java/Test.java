@@ -20,31 +20,31 @@ public class Test {
 
     public static void main(String[] args) {
         BayesNode a = net.createNode("a");
-//        a.addOutcomes("true", "false");
-        String[] list = new String[2];
-        list[0] = "true";
-        list[1] = "false";
-        a.addOutcomes(list);
+        a.addOutcomes("true", "false");
+//        String[] list = new String[2];
+//        list[0] = "true";
+//        list[1] = "false";
+//        a.addOutcomes(list);
 
         a.setProbabilities(0.2, 0.8);
         BayesNode b = net.createNode("b");
         b.addOutcomes("one", "two", "three");
         b.setParents(Arrays.asList(a));
 
-//        b.setProbabilities(
-//                0.1, 0.4, 0.5, /* a == true*/
-//                0.3, 0.4, 0.3 /* a == false*/
-//        );
+        b.setProbabilities(
+                0.1, 0.4, 0.5, /* a == true*/
+                0.3, 0.4, 0.3 /* a == false*/
+        );
 
-        double[] bProbabilities = new double[6];
-        bProbabilities[0] = 0.1;
-        bProbabilities[1] = 0.4;
-        bProbabilities[2] = 0.5;
-        bProbabilities[3] = 0.3;
-        bProbabilities[4] = 0.4;
-        bProbabilities[5] = 0.3;
-
-        b.setProbabilities(bProbabilities);
+//        double[] bProbabilities = new double[6];
+//        bProbabilities[0] = 0.1;
+//        bProbabilities[1] = 0.4;
+//        bProbabilities[2] = 0.5;
+//        bProbabilities[3] = 0.3;
+//        bProbabilities[4] = 0.4;
+//        bProbabilities[5] = 0.3;
+//
+//        b.setProbabilities(bProbabilities);
 
         BayesNode c = net.createNode("c");
         c.addOutcomes("true", "false");
@@ -65,13 +65,13 @@ public class Test {
         inferer.setNetwork(net);
 
         Map<BayesNode, String> evidence = new HashMap<BayesNode, String>();
-        evidence.put(a, "false");
+//        evidence.put(a, "false");
 //        evidence.put(b, "three");
         inferer.setEvidence(evidence);
 
-        double[] beliefsC = inferer.getBeliefs(c);
+        double[] beliefsC = inferer.getBeliefs(a);
 
-
+        System.out.println(beliefsC[0] + " ---- " + beliefsC[1]);
         algo.getFactory().setFloatingPointType(float.class);
         algo.setNetwork(net);
 

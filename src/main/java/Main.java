@@ -1,3 +1,9 @@
+import jayes.BayesNet;
+import jayes.BayesNode;
+import jayes.inference.IBayesInferer;
+import jayes.inference.junctionTree.JunctionTreeAlgorithm;
+import jayes.inference.junctionTree.JunctionTreeBuilder;
+import jayes.util.triangulation.MinFillIn;
 import object.*;
 
 import javax.swing.*;
@@ -5,6 +11,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by cuongnb on 11/18/16.
@@ -24,18 +32,28 @@ public class Main extends JPanel implements ActionListener {
     private Paintable selectedShape;
     private Point2D offset;
 
+    public BayesNet net;
+    IBayesInferer inferer;
+
+    public JunctionTreeBuilder builder = JunctionTreeBuilder.forHeuristic(new MinFillIn());
+    public JunctionTreeAlgorithm algo = new JunctionTreeAlgorithm();
+
     AddNode addNode = new AddNode("add node", 10, 10, Color.WHITE);
     AddArrow addArrow = new AddArrow(80, 10, Color.WHITE);
+    AddNode setBayes = new AddNode("Set Bayes", 150, 10, Color.BLUE);
+    AddNode run = new AddNode("Run", 220, 10, Color.BLUE);
+
+    public boolean isRun = false;
 
     Point pointStart = null;
     Point pointEnd = null;
     Arrow arrow = new Arrow();
 
-
     public Main() {
-
         controls.add(addNode);
         controls.add(addArrow);
+        controls.add(setBayes);
+        controls.add(run);
 
         String fruit1 = "a";
         String fruit2 = "b";
@@ -46,14 +64,14 @@ public class Main extends JPanel implements ActionListener {
         Node bubble = new Node(fruit2, baseFont, 150, 100);
         addFruit(bubble);
         bubble = new Node(fruit3, baseFont, 150, 150);
-        addFruit(bubble);
+//        addFruit(bubble);
 
         this.setFont(baseFont);
         this.addMouseListener(new MouseAdapter() {
 
             @Override
             public void mousePressed(MouseEvent e) {
-
+                setBackground();
                 if (e.getButton() == MouseEvent.BUTTON1) {
 
                     if (addNode.contains(e.getPoint())) {
@@ -78,7 +96,39 @@ public class Main extends JPanel implements ActionListener {
                             addArrow.setBackground(Color.RED);
                         }
                     }
-//                    System.out.println("Detect Mouse Left Click");
+
+                    if (isRun) {
+                        if (run.contains(e.getPoint())) {
+                            ProjectManagement.currentNode.background = Color.RED;
+                            System.out.println(ProjectManagement.currentNode.name);
+                            Map<BayesNode, String> evidence = new HashMap<BayesNode, String>();
+                            inferer.setEvidence(evidence);
+                            double[] beliefsC = inferer.getBeliefs(ProjectManagement.currentNode.node);
+                            for (int i = 0; i < ProjectManagement.currentNode.sOutcome.size(); i++) {
+                                System.out.println(ProjectManagement.currentNode.sOutcome.get(i) + " : " + beliefsC[i]);
+                            }
+                        }
+                    }
+
+                    if (setBayes.contains(e.getPoint())) {
+                        net = new BayesNet();
+                        inferer = new JunctionTreeAlgorithm();
+                        for (Node node : nodes) {
+                            node.setNode(net);
+                        }
+                        inferer.setNetwork(net);
+                    }
+
+                } else if (e.getButton() == MouseEvent.BUTTON2) {
+                    if (run.contains(e.getPoint())) {
+                        if (isRun) {
+                            run.setBackground(Color.BLUE);
+                            isRun = false;
+                        } else {
+                            run.setBackground(Color.RED);
+                            isRun = true;
+                        }
+                    }
 
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
 
@@ -88,11 +138,9 @@ public class Main extends JPanel implements ActionListener {
 
                             ProjectManagement.currentNode = nodes.get(i);
                             if (DEBUG) {
-                                System.out.println(ProjectManagement.currentNode.name);
-                                System.out.println("number of outcome: " + ProjectManagement.currentNode.sOutcome.size());
-                                System.out.println("number of parent: " + ProjectManagement.currentNode.nodeParent.size());
+                                System.out.println(ProjectManagement.currentNode.toString());
                             }
-                            ListControl listControl = new ListControl();
+                            ListControl listControl = new ListControl(e.getLocationOnScreen());
                             listControl.setLocation(e.getLocationOnScreen());
                             listControl.setSize(100, 100);
                             listControl.setResizable(true);
@@ -104,15 +152,29 @@ public class Main extends JPanel implements ActionListener {
                 }
 
                 if (e.getButton() == MouseEvent.BUTTON1) {
+                    boolean isHaveNode = false;
                     for (int i = 0; i < nodes.size(); i++) {
                         Paintable p = nodes.get(i);
                         if (p.contains(e.getPoint())) {
                             // select
                             selectedShape = p;
+                            if (isRun) {
+                                isHaveNode = true;
+                                ProjectManagement.currentNode = nodes.get(i);
+                            }
+
+                            if (DEBUG) {
+                                System.out.println(nodes.get(i).toString());
+                            }
+
                             offset = new Point2D.Double(e.getX() - p.getBounds().getX(), e.getY() - p.getBounds().getY());
                         }
+                        nodes.get(i).background = Color.WHITE;
                     }
                     pointStart = e.getPoint();
+                    if (isHaveNode) {
+                        ProjectManagement.currentNode.background = Color.RED;
+                    }
                 }
                 repaint();
             }
@@ -242,6 +304,12 @@ public class Main extends JPanel implements ActionListener {
         }
     }
 
+
+    public void setBackground() {
+        for (Node node : nodes) {
+            node.background = Color.WHITE;
+        }
+    }
 
     private void getPoint() {
         // TODO: 11/18/16 change position for arrow
