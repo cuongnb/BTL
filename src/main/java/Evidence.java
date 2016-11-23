@@ -9,19 +9,21 @@ import java.util.ArrayList;
 /**
  * Created by cuongnb on 23/11/2016.
  */
-public class ListOutcome extends JFrame
+public class Evidence extends JFrame
         implements ListSelectionListener {
     private JList list;
     private DefaultListModel listModel;
-    private Node node;
+    private Point point;
+    private ArrayList<Node> nodes;
 
-    public ListOutcome(Node node) {
-        this.node = node;
+    public Evidence(Point point, ArrayList<Node> nodes) {
+        this.point = point;
+        this.nodes = nodes;
         listModel = new DefaultListModel();
 
         listModel.addElement("Select Node");
-        for (String s : node.sOutcome) {
-            listModel.addElement(s);
+        for (Node node : nodes) {
+            listModel.addElement(node.name);
         }
 
         //Create the list and put it in a scroll pane.
@@ -57,8 +59,15 @@ public class ListOutcome extends JFrame
     @Override
     public void valueChanged(ListSelectionEvent listSelectionEvent) {
         System.out.println(listModel.get(listSelectionEvent.getLastIndex()));
-        ProjectManagement.nodeStringMap.put(node, listModel.get(listSelectionEvent.getLastIndex()) + "");
-        System.out.println("Add evidence   name: " + node.name + " outcome: " + listModel.get(listSelectionEvent.getLastIndex()));
+        int index = listSelectionEvent.getLastIndex();
+        System.out.println(index);
         this.dispose();
+        ListOutcome evidence = new ListOutcome(nodes.get(index - 1));
+        evidence.setLocation(point);
+        evidence.setSize(100, 100);
+        evidence.setResizable(true);
+        evidence.pack();
+        evidence.setVisible(true);
+
     }
 }

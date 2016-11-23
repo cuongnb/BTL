@@ -42,6 +42,7 @@ public class Main extends JPanel implements ActionListener {
     AddArrow addArrow = new AddArrow(80, 10, Color.WHITE);
     AddNode setBayes = new AddNode("Set Bayes", 150, 10, Color.BLUE);
     AddNode run = new AddNode("Run", 220, 10, Color.BLUE);
+    AddNode evidence = new AddNode("Evidence", 290, 10, Color.BLUE);
 
     public boolean isRun = false;
 
@@ -54,17 +55,7 @@ public class Main extends JPanel implements ActionListener {
         controls.add(addArrow);
         controls.add(setBayes);
         controls.add(run);
-
-        String fruit1 = "a";
-        String fruit2 = "b";
-        String fruit3 = "c";
-
-        Node person = new Node(fruit1, baseFont, 150, 50);
-        addFruit(person);
-        Node bubble = new Node(fruit2, baseFont, 150, 100);
-        addFruit(bubble);
-        bubble = new Node(fruit3, baseFont, 150, 150);
-//        addFruit(bubble);
+        controls.add(evidence);
 
         this.setFont(baseFont);
         this.addMouseListener(new MouseAdapter() {
@@ -97,11 +88,24 @@ public class Main extends JPanel implements ActionListener {
                     }
                     if (setBayes.contains(e.getPoint())) {
                         net = new BayesNet();
-                        inferer = new JunctionTreeAlgorithm();
+
                         for (Node node : nodes) {
                             node.setNode(net);
                         }
+                        inferer = new JunctionTreeAlgorithm();
                         inferer.setNetwork(net);
+
+                        if (ProjectManagement.nodeStringMap.size() > 0) {
+                            Map<BayesNode, String> evidence = new HashMap<BayesNode, String>();
+                            for (Map.Entry entry : ProjectManagement.nodeStringMap.entrySet()) {
+                                Node node = (Node) entry.getKey();
+                                String outcome = (String) entry.getValue();
+                                evidence.put(node.node, outcome);
+                                System.out.println(node.node.getName() + " -- " + outcome);
+                            }
+                            inferer.setEvidence(evidence);
+                        }
+
                     }
                     if (run.contains(e.getPoint())) {
                         if (isRun) {
@@ -111,6 +115,15 @@ public class Main extends JPanel implements ActionListener {
                             run.setBackground(Color.RED);
                             isRun = true;
                         }
+                    }
+                    if (evidence.contains(e.getPoint())) {
+                        Evidence evidence = new Evidence(e.getLocationOnScreen(), nodes);
+                        evidence.setLocation(e.getLocationOnScreen());
+                        evidence.setSize(200, 200);
+                        evidence.setResizable(true);
+                        evidence.pack();
+                        evidence.setVisible(true);
+
                     }
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
 
@@ -126,8 +139,6 @@ public class Main extends JPanel implements ActionListener {
                             if (isRun) {
                                 ProjectManagement.currentNode.background = Color.RED;
                                 System.out.println(ProjectManagement.currentNode.name);
-                                Map<BayesNode, String> evidence = new HashMap<BayesNode, String>();
-                                inferer.setEvidence(evidence);
                                 double[] beliefsC = inferer.getBeliefs(ProjectManagement.currentNode.node);
                                 ProjectManagement.currentNode.setValueOutcomes(beliefsC);
                                 for (int n = 0; n < ProjectManagement.currentNode.sOutcome.size(); n++) {
@@ -137,7 +148,7 @@ public class Main extends JPanel implements ActionListener {
 
                             ListControl listControl = new ListControl(e.getLocationOnScreen(), isRun);
                             listControl.setLocation(e.getLocationOnScreen());
-                            listControl.setSize(100, 100);
+                            listControl.setSize(200, 200);
                             listControl.setResizable(true);
                             listControl.pack();
                             listControl.setVisible(true);

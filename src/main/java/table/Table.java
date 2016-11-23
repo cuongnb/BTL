@@ -18,7 +18,7 @@ public class Table extends JFrame {
 
 
     public Table(Node currentNode) {
-        super("Groupable Header Example");
+        super("Add Probabilities");
 
         DefaultTableModel dm = new DefaultTableModel();
         dm.setDataVector(currentNode.data, currentNode.sColumns);
@@ -98,7 +98,6 @@ public class Table extends JFrame {
         header.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
-                System.out.println("cuongnb");
                 System.out.println(table.getEditingColumn());
 
                 TableModel tb = table.getModel();

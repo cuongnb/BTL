@@ -65,11 +65,11 @@ public class Test {
         inferer.setNetwork(net);
 
         Map<BayesNode, String> evidence = new HashMap<BayesNode, String>();
-//        evidence.put(a, "false");
-//        evidence.put(b, "three");
+        evidence.put(a, "false");
+        evidence.put(b, "three");
         inferer.setEvidence(evidence);
 
-        double[] beliefsC = inferer.getBeliefs(b);
+        double[] beliefsC = inferer.getBeliefs(c);
 
         System.out.println(beliefsC[0] + " ---- " + beliefsC[1]);
         algo.getFactory().setFloatingPointType(float.class);

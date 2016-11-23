@@ -93,7 +93,13 @@ public class ListControl extends JFrame
                     ProjectManagement.currentNode.name = name;
                     break;
                 case 2:
-                    ListOutcome.createAndShowGUI(point);
+//                    AddOutcome.createAndShowGUI(point);
+                    AddOutcome addOutcome = new AddOutcome();
+                    addOutcome.setLocation(point);
+                    addOutcome.setSize(100, 100);
+                    addOutcome.setResizable(true);
+                    addOutcome.pack();
+                    addOutcome.setVisible(true);
                     break;
 
                 case 3:

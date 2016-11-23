@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 
@@ -118,7 +119,6 @@ public class Node implements Paintable {
     }
 
     public void setData() {
-
         data = new Object[sOutcome.size()][sColumns.length];
         for (int m = 0; m < sOutcome.size(); m++) {
             for (int n = 0; n < sColumns.length; n++) {
@@ -160,6 +160,7 @@ public class Node implements Paintable {
                 ", sColumns=" + Arrays.toString(sColumns) + "\n" +
                 '}';
     }
+
 
     public String printParent() {
         StringBuffer buffer = new StringBuffer();
