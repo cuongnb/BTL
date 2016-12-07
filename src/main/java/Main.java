@@ -5,6 +5,7 @@ import jayes.inference.junctionTree.JunctionTreeAlgorithm;
 import jayes.inference.junctionTree.JunctionTreeBuilder;
 import jayes.util.triangulation.MinFillIn;
 import object.*;
+import util.Constant;
 
 import javax.swing.*;
 import java.awt.*;
@@ -320,4 +321,5 @@ public class Main extends JPanel implements ActionListener {
     private void getPoint() {
         // TODO: 11/18/16 change position for arrow
     }
+
 }

@@ -1,11 +1,14 @@
 import object.Node;
 import table.*;
 import table.ViewNode;
+import util.Constant;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by cuongnb on 11/18/16.
@@ -16,6 +19,7 @@ public class ListControl extends JFrame
     private DefaultListModel listModel;
     private Point point;
     private boolean isRun = false;
+    private String input;
 
     public ListControl(Point point, boolean isRun) {
 //        super(new BorderLayout());
@@ -94,12 +98,34 @@ public class ListControl extends JFrame
                     break;
                 case 2:
 //                    AddOutcome.createAndShowGUI(point);
-                    AddOutcome addOutcome = new AddOutcome();
-                    addOutcome.setLocation(point);
-                    addOutcome.setSize(100, 100);
-                    addOutcome.setResizable(true);
-                    addOutcome.pack();
-                    addOutcome.setVisible(true);
+
+                    String[] choices = {Constant.caseTest.rankedNode.toString(), Constant.caseTest.normally.toString()};
+                    input = (String) JOptionPane.showInputDialog(null, "Choose now...",
+                            "The Choice of ...", JOptionPane.QUESTION_MESSAGE, null, // Use
+                            // default
+                            // icon
+                            choices, // Array of choices
+                            choices[1]); // Initial choice
+                    System.out.println(input);
+                    if (input.equals(Constant.caseTest.normally)) {
+                        AddOutcome addOutcome = new AddOutcome();
+                        addOutcome.setLocation(point);
+                        addOutcome.setSize(100, 100);
+                        addOutcome.setResizable(true);
+                        addOutcome.pack();
+                        addOutcome.setVisible(true);
+                    } else {
+                        ArrayList<String> arrayList = new ArrayList<>();
+                        for (Constant.outcome outcome : Arrays.asList(Constant.outcome.values())) {
+                            arrayList.add(outcome.toString());
+                        }
+                        RankedOutcome evidence = new RankedOutcome(point, arrayList);
+                        evidence.setLocation(point);
+                        evidence.setSize(200, 200);
+                        evidence.setResizable(true);
+                        evidence.pack();
+                        evidence.setVisible(true);
+                    }
                     break;
 
                 case 3:
