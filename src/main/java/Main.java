@@ -5,7 +5,7 @@ import jayes.inference.junctionTree.JunctionTreeAlgorithm;
 import jayes.inference.junctionTree.JunctionTreeBuilder;
 import jayes.util.triangulation.MinFillIn;
 import object.*;
-import util.Constant;
+import util.Model;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,6 +44,7 @@ public class Main extends JPanel implements ActionListener {
     AddNode setBayes = new AddNode("Set Bayes", 150, 10, Color.BLUE);
     AddNode run = new AddNode("Run", 220, 10, Color.BLUE);
     AddNode evidence = new AddNode("Evidence", 290, 10, Color.BLUE);
+    AddNode saveModel = new AddNode("Save Model", 360, 10, Color.BLUE);
 
     public boolean isRun = false;
 
@@ -57,6 +58,7 @@ public class Main extends JPanel implements ActionListener {
         controls.add(setBayes);
         controls.add(run);
         controls.add(evidence);
+        controls.add(saveModel);
 
         this.setFont(baseFont);
         this.addMouseListener(new MouseAdapter() {
@@ -77,8 +79,7 @@ public class Main extends JPanel implements ActionListener {
                         addNode.setBackground(Color.RED);
                         Node newNode = new Node(name, baseFont, 10, 60);
                         addFruit(newNode);
-                    }
-                    if (addArrow.contains(e.getPoint())) {
+                    } else if (addArrow.contains(e.getPoint())) {
                         if (isClickAddArrow) {
                             isClickAddArrow = false;
                             addArrow.setBackground(Color.WHITE);
@@ -86,8 +87,7 @@ public class Main extends JPanel implements ActionListener {
                             isClickAddArrow = true;
                             addArrow.setBackground(Color.RED);
                         }
-                    }
-                    if (setBayes.contains(e.getPoint())) {
+                    } else if (setBayes.contains(e.getPoint())) {
                         net = new BayesNet();
 
                         for (Node node : nodes) {
@@ -107,8 +107,7 @@ public class Main extends JPanel implements ActionListener {
                             inferer.setEvidence(evidence);
                         }
 
-                    }
-                    if (run.contains(e.getPoint())) {
+                    } else if (run.contains(e.getPoint())) {
                         if (isRun) {
                             run.setBackground(Color.BLUE);
                             isRun = false;
@@ -116,8 +115,7 @@ public class Main extends JPanel implements ActionListener {
                             run.setBackground(Color.RED);
                             isRun = true;
                         }
-                    }
-                    if (evidence.contains(e.getPoint())) {
+                    } else if (evidence.contains(e.getPoint())) {
                         Evidence evidence = new Evidence(e.getLocationOnScreen(), nodes);
                         evidence.setLocation(e.getLocationOnScreen());
                         evidence.setSize(200, 200);
@@ -125,7 +123,14 @@ public class Main extends JPanel implements ActionListener {
                         evidence.pack();
                         evidence.setVisible(true);
 
+                    } else if (saveModel.contains(e.getPoint())) {
+                        JFrame frame = new JFrame("InputDialog Example #1");
+                        // prompt the user to enter their name
+                        String name = JOptionPane.showInputDialog(frame, "Model name?");
+
+                        Model.save(nodes, name);
                     }
+
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
 
                     for (int i = 0; i < nodes.size(); i++) {

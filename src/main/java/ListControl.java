@@ -98,34 +98,44 @@ public class ListControl extends JFrame
                     break;
                 case 2:
 //                    AddOutcome.createAndShowGUI(point);
-
-                    String[] choices = {Constant.caseTest.rankedNode.toString(), Constant.caseTest.normally.toString()};
-                    input = (String) JOptionPane.showInputDialog(null, "Choose now...",
-                            "The Choice of ...", JOptionPane.QUESTION_MESSAGE, null, // Use
-                            // default
-                            // icon
-                            choices, // Array of choices
-                            choices[1]); // Initial choice
-                    System.out.println(input);
-                    if (input.equals(Constant.caseTest.normally)) {
+//                    if (ProjectManagement.currentNode.nodeParent.size() == 0) {
+//                        String[] choices = {Constant.caseTest.rankedNode.toString(), Constant.caseTest.normally.toString()};
+//                        input = (String) JOptionPane.showInputDialog(null, "Choose now...",
+//                                "The Choice of ...", JOptionPane.QUESTION_MESSAGE, null, // Use
+//                                // default
+//                                // icon
+//                                choices, // Array of choices
+//                                choices[1]); // Initial choice
+//                        System.out.println(input);
+//                        if (input.equals(Constant.caseTest.normally)) {
+//                            AddOutcome addOutcome = new AddOutcome();
+//                            addOutcome.setLocation(point);
+//                            addOutcome.setSize(100, 100);
+//                            addOutcome.setResizable(true);
+//                            addOutcome.pack();
+//                            addOutcome.setVisible(true);
+//                        } else {
+//                            ArrayList<String> arrayList = new ArrayList<>();
+//                            for (Constant.outcome outcome : Arrays.asList(Constant.outcome.values())) {
+//                                arrayList.add(outcome.toString());
+//                            }
+//                            RankedOutcome evidence = new RankedOutcome(point, arrayList);
+//                            evidence.setLocation(point);
+//                            evidence.setSize(200, 200);
+//                            evidence.setResizable(true);
+//                            evidence.pack();
+//                            evidence.setVisible(true);
+//                        }
+//                    } else {
                         AddOutcome addOutcome = new AddOutcome();
                         addOutcome.setLocation(point);
                         addOutcome.setSize(100, 100);
                         addOutcome.setResizable(true);
                         addOutcome.pack();
                         addOutcome.setVisible(true);
-                    } else {
-                        ArrayList<String> arrayList = new ArrayList<>();
-                        for (Constant.outcome outcome : Arrays.asList(Constant.outcome.values())) {
-                            arrayList.add(outcome.toString());
-                        }
-                        RankedOutcome evidence = new RankedOutcome(point, arrayList);
-                        evidence.setLocation(point);
-                        evidence.setSize(200, 200);
-                        evidence.setResizable(true);
-                        evidence.pack();
-                        evidence.setVisible(true);
-                    }
+//                    }
+
+
                     break;
 
                 case 3:

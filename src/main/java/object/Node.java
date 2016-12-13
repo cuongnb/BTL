@@ -150,15 +150,12 @@ public class Node implements Paintable {
 
     @Override
     public String toString() {
-        return "Node{" +
-                "node=" + node +
-                ", name='" + name + '\'' +
-                ", sOutcome=" + sOutcome + "\n" +
-                ", nodeParent=" + printParent() + "\n" +
-                ", nodeChild=" + printChild() + "\n" +
-                ", data=" + "\n" + printData() + "\n" +
-                ", sColumns=" + Arrays.toString(sColumns) + "\n" +
-                '}';
+        return "Node name=" + name + "\n" +
+                "sOutcome=" + sOutcome + "\n" +
+                "nodeParent=" + printParent() + "\n" +
+                "nodeChild=" + printChild() + "\n" +
+                "data=" + "\n" + printData() + "\n" +
+                "sColumns=" + Arrays.toString(sColumns) + "\n";
     }
 
 
@@ -167,7 +164,7 @@ public class Node implements Paintable {
         buffer.append("[ ");
         if (nodeParent.size() > 0) {
             for (Node node : nodeParent) {
-                buffer.append(node.name + " ");
+                buffer.append(node.name + "---");
             }
         }
         buffer.append(" ] ");
@@ -179,7 +176,7 @@ public class Node implements Paintable {
         buffer.append("[ ");
         if (nodeChild.size() > 0) {
             for (Node node : nodeChild) {
-                buffer.append(node.name + " ");
+                buffer.append(node.name + "---");
             }
         }
         buffer.append(" ]");
@@ -191,9 +188,9 @@ public class Node implements Paintable {
         if (data != null) {
             for (int m = 0; m < data.length; m++) {
                 for (int n = 1; n < data[0].length; n++) {
-                    buffer.append(data[m][n] + " ");
+                    buffer.append(data[m][n] + "---");
                 }
-                buffer.append("\n");
+                buffer.append("+++");
             }
         } else {
             return "[]";

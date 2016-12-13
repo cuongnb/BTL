@@ -13,6 +13,4 @@ public class ProjectManagement {
     // for evidence
     public static Map<Node, String> nodeStringMap = new HashMap<Node, String>();
 
-
-
 }
