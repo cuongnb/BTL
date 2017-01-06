@@ -45,6 +45,7 @@ public class Main extends JPanel implements ActionListener {
     AddNode run = new AddNode("Run", 220, 10, Color.BLUE);
     AddNode evidence = new AddNode("Evidence", 290, 10, Color.BLUE);
     AddNode saveModel = new AddNode("Save Model", 360, 10, Color.BLUE);
+    AddNode openModel = new AddNode("Open Model", 430, 10, Color.BLUE);
 
     public boolean isRun = false;
 
@@ -52,13 +53,18 @@ public class Main extends JPanel implements ActionListener {
     Point pointEnd = null;
     Arrow arrow = new Arrow();
 
+    private String input = "";
+
     public Main() {
+
+
         controls.add(addNode);
         controls.add(addArrow);
         controls.add(setBayes);
         controls.add(run);
         controls.add(evidence);
         controls.add(saveModel);
+        controls.add(openModel);
 
         this.setFont(baseFont);
         this.addMouseListener(new MouseAdapter() {
@@ -127,11 +133,36 @@ public class Main extends JPanel implements ActionListener {
                         JFrame frame = new JFrame("InputDialog Example #1");
                         // prompt the user to enter their name
                         String name = JOptionPane.showInputDialog(frame, "Model name?");
+                        Model model = new Model();
+                        model.save(nodes, name);
+                    } else if (openModel.contains(e.getPoint())) {
+                        String[] choices = {"Create new", "Open File"};
+                        input = (String) JOptionPane.showInputDialog(null, "Choose now...",
+                                "The Choice of ...", JOptionPane.QUESTION_MESSAGE, null, // Use
+                                // default
+                                // icon
+                                choices, // Array of choices
+                                choices[1]); // Initial choice
+                        System.out.println(input);
+                        if (input.equals("Create new")) {
 
-                        Model.save(nodes, name);
+                        } else {
+                            Model model = new Model();
+                            model.readFile(nodes);
+                        }
                     }
 
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
+
+                    if (evidence.contains(e.getPoint())) {
+                        ShowEvidence showEvidence = new ShowEvidence();
+                        showEvidence.setLocation(e.getPoint());
+                        showEvidence.setSize(100, 100);
+                        showEvidence.setResizable(true);
+                        showEvidence.pack();
+                        showEvidence.setVisible(true);
+
+                    }
 
                     for (int i = 0; i < nodes.size(); i++) {
                         if (nodes.get(i).contains(e.getPoint())) {

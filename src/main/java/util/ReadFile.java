@@ -1,17 +1,19 @@
 package util;
 
+import object.Node;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by cuongnb on 14/12/2016.
  */
-public class ReadFileExample1 {
+public class ReadFile {
 
-    private static final String FILENAME = "/home/cuongnb/Desktop/cuongnb.txt~";
 
-    public static void main(String[] args) {
+    public void run(String FILENAME, ArrayList<Node> nodes) {
 
         BufferedReader br = null;
         FileReader fr = null;
@@ -27,6 +29,9 @@ public class ReadFileExample1 {
 
             while ((sCurrentLine = br.readLine()) != null) {
                 System.out.println(sCurrentLine);
+                if (sCurrentLine.length() > 0) {
+                    nodes.add(new Node(sCurrentLine));
+                }
             }
 
         } catch (IOException e) {

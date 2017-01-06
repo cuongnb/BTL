@@ -11,9 +11,8 @@ import java.util.ArrayList;
  * Created by cuongnb on 14/12/2016.
  */
 public class Model extends JFrame {
-//    private JTextField filename = new JTextField();
 
-    public static void save(ArrayList<Node> nodes, String name) {
+    public void save(ArrayList<Node> nodes, String name) {
         try {
             PrintWriter writer = new PrintWriter(name);
             for (Node node : nodes) {
@@ -25,22 +24,21 @@ public class Model extends JFrame {
         }
     }
 
-    public void readFile() {
+    public void readFile(ArrayList<Node> nodes) {
         JFileChooser c = new JFileChooser();
         // Demonstrate "Open" dialog:
         int rVal = c.showOpenDialog(Model.this);
         if (rVal == JFileChooser.APPROVE_OPTION) {
-//            filename.setText(c.getSelectedFile().getName());
-            System.out.println(c.getCurrentDirectory().toString() + "/" + c.getSelectedFile().getName());
-        }
-        if (rVal == JFileChooser.CANCEL_OPTION) {
-//            filename.setText("You pressed cancel");
+            String filename = c.getCurrentDirectory().toString() + "/" + c.getSelectedFile().getName();
+            System.out.println(filename);
+            ReadFile readFile = new ReadFile();
+            readFile.run(filename, nodes);
         }
     }
 
-    public static void main(String[] args) {
-        Model model = new Model();
-        model.readFile();
-    }
+//    public static void main(String[] args) {
+//        Model model = new Model();
+//        model.readFile();
+//    }
 
 }
