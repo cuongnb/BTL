@@ -1,0 +1,14 @@
+Node{node=null, name='cuongnb', sOutcome=[]
+, nodeParent=[  ] 
+, nodeChild=[ bbb  ]
+, data=
+[]
+, sColumns=null
+}
+Node{node=null, name='bbb', sOutcome=[a, b]
+, nodeParent=[ cuongnb  ] 
+, nodeChild=[  ]
+, data=
+[]
+, sColumns=null
+}

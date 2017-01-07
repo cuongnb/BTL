@@ -5,7 +5,7 @@ import jayes.inference.junctionTree.JunctionTreeAlgorithm;
 import jayes.inference.junctionTree.JunctionTreeBuilder;
 import jayes.util.triangulation.MinFillIn;
 import object.*;
-import util.Constant;
+import util.Model;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,6 +36,8 @@ public class Main extends JPanel implements ActionListener {
     public BayesNet net;
     IBayesInferer inferer;
 
+    boolean isOpen = false;
+
     public JunctionTreeBuilder builder = JunctionTreeBuilder.forHeuristic(new MinFillIn());
     public JunctionTreeAlgorithm algo = new JunctionTreeAlgorithm();
 
@@ -44,6 +46,9 @@ public class Main extends JPanel implements ActionListener {
     AddNode setBayes = new AddNode("Set Bayes", 150, 10, Color.BLUE);
     AddNode run = new AddNode("Run", 220, 10, Color.BLUE);
     AddNode evidence = new AddNode("Evidence", 290, 10, Color.BLUE);
+    AddNode saveModel = new AddNode("Save Model", 360, 10, Color.BLUE);
+    AddNode openModel = new AddNode("Open Model", 430, 10, Color.BLUE);
+    AddNode snyc = new AddNode("SNYC", 500, 10, Color.BLUE);
 
     public boolean isRun = false;
 
@@ -51,12 +56,19 @@ public class Main extends JPanel implements ActionListener {
     Point pointEnd = null;
     Arrow arrow = new Arrow();
 
+    private String input = "";
+
     public Main() {
+
+
         controls.add(addNode);
         controls.add(addArrow);
         controls.add(setBayes);
         controls.add(run);
         controls.add(evidence);
+        controls.add(saveModel);
+        controls.add(openModel);
+        controls.add(snyc);
 
         this.setFont(baseFont);
         this.addMouseListener(new MouseAdapter() {
@@ -77,8 +89,7 @@ public class Main extends JPanel implements ActionListener {
                         addNode.setBackground(Color.RED);
                         Node newNode = new Node(name, baseFont, 10, 60);
                         addFruit(newNode);
-                    }
-                    if (addArrow.contains(e.getPoint())) {
+                    } else if (addArrow.contains(e.getPoint())) {
                         if (isClickAddArrow) {
                             isClickAddArrow = false;
                             addArrow.setBackground(Color.WHITE);
@@ -86,8 +97,7 @@ public class Main extends JPanel implements ActionListener {
                             isClickAddArrow = true;
                             addArrow.setBackground(Color.RED);
                         }
-                    }
-                    if (setBayes.contains(e.getPoint())) {
+                    } else if (setBayes.contains(e.getPoint())) {
                         net = new BayesNet();
 
                         for (Node node : nodes) {
@@ -107,8 +117,7 @@ public class Main extends JPanel implements ActionListener {
                             inferer.setEvidence(evidence);
                         }
 
-                    }
-                    if (run.contains(e.getPoint())) {
+                    } else if (run.contains(e.getPoint())) {
                         if (isRun) {
                             run.setBackground(Color.BLUE);
                             isRun = false;
@@ -116,8 +125,7 @@ public class Main extends JPanel implements ActionListener {
                             run.setBackground(Color.RED);
                             isRun = true;
                         }
-                    }
-                    if (evidence.contains(e.getPoint())) {
+                    } else if (evidence.contains(e.getPoint())) {
                         Evidence evidence = new Evidence(e.getLocationOnScreen(), nodes);
                         evidence.setLocation(e.getLocationOnScreen());
                         evidence.setSize(200, 200);
@@ -125,8 +133,44 @@ public class Main extends JPanel implements ActionListener {
                         evidence.pack();
                         evidence.setVisible(true);
 
+                    } else if (saveModel.contains(e.getPoint())) {
+                        JFrame frame = new JFrame("InputDialog Example #1");
+                        // prompt the user to enter their name
+                        String name = JOptionPane.showInputDialog(frame, "Model name?");
+                        Model model = new Model();
+                        model.save(nodes, relationships, name);
+                    } else if (snyc.contains(e.getPoint())) {
+                        syn();
+
+                    } else if (openModel.contains(e.getPoint())) {
+                        String[] choices = {"Create new", "Open File"};
+                        input = (String) JOptionPane.showInputDialog(null, "Choose now...",
+                                "The Choice of ...", JOptionPane.QUESTION_MESSAGE, null, // Use
+                                // default
+                                // icon
+                                choices, // Array of choices
+                                choices[1]); // Initial choice
+                        System.out.println(input);
+                        if (input.equals("Create new")) {
+
+                        } else {
+                            isOpen = true;
+                            Model model = new Model();
+                            model.readFile(ProjectManagement.openNodes, ProjectManagement.openRelationships);
+                        }
                     }
+
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
+
+                    if (evidence.contains(e.getPoint())) {
+                        ShowEvidence showEvidence = new ShowEvidence();
+                        showEvidence.setLocation(e.getPoint());
+                        showEvidence.setSize(100, 100);
+                        showEvidence.setResizable(true);
+                        showEvidence.pack();
+                        showEvidence.setVisible(true);
+
+                    }
 
                     for (int i = 0; i < nodes.size(); i++) {
                         if (nodes.get(i).contains(e.getPoint())) {
@@ -189,36 +233,38 @@ public class Main extends JPanel implements ActionListener {
             @Override
             public void mouseReleased(MouseEvent e) {
 //                System.out.println("Mouse Cursor Coordinates => X:" + e.getX() + " |Y:" + e.getY());
-                Node nodeStart = null;
-                Node nodeEnd = null;
-                if (pointStart != null && pointEnd != null) {
-                    for (Node p : nodes) {
-                        if (p.contains(pointStart)) {
+                if (!isOpen) {
+                    Node nodeStart = null;
+                    Node nodeEnd = null;
+                    if (pointStart != null && pointEnd != null) {
+                        for (Node p : nodes) {
+                            if (p.contains(pointStart)) {
 //                            System.out.println("point start");
-                            nodeStart = p;
-                        }
-                        if (p.contains(pointEnd)) {
+                                nodeStart = p;
+                            }
+                            if (p.contains(pointEnd)) {
 //                            System.out.println("pont end");
-                            nodeEnd = p;
-                        }
-                    }
-                    if (nodeEnd != null && nodeStart != null && nodeEnd != nodeStart) {
-                        relationships.add(new Relationship(nodeStart, nodeEnd));
-                        nodeStart.nodeChild.add(nodeEnd);
-                        nodeEnd.nodeParent.add(nodeStart);
-
-                        if (DEBUG) {
-                            for (Node node : nodeEnd.nodeParent) {
-                                System.out.println(node.name);
+                                nodeEnd = p;
                             }
                         }
+                        if (nodeEnd != null && nodeStart != null && nodeEnd != nodeStart) {
+                            relationships.add(new Relationship(nodeStart, nodeEnd));
+                            nodeStart.nodeChild.add(nodeEnd);
+                            nodeEnd.nodeParent.add(nodeStart);
 
+                            if (DEBUG) {
+                                for (Node node : nodeEnd.nodeParent) {
+                                    System.out.println(node.name);
+                                }
+                            }
+
+                        }
                     }
+                    addNode.setBackground(Color.WHITE);
+                    selectedShape = null;
+                    pointStart = null;
+                    pointEnd = null;
                 }
-                addNode.setBackground(Color.WHITE);
-                selectedShape = null;
-                pointStart = null;
-                pointEnd = null;
                 repaint();
             }
         });
@@ -320,6 +366,20 @@ public class Main extends JPanel implements ActionListener {
 
     private void getPoint() {
         // TODO: 11/18/16 change position for arrow
+    }
+
+    private void syn() {
+        nodes = new ArrayList<>();
+        relationships = new ArrayList<>();
+        repaint();
+        for (Node node : ProjectManagement.openNodes) {
+            nodes.add(node);
+            repaint();
+        }
+        for (Relationship relationship : ProjectManagement.openRelationships) {
+            relationships.add(relationship);
+            repaint();
+        }
     }
 
 }

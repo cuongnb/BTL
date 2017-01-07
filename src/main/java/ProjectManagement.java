@@ -1,6 +1,8 @@
 import object.Node;
+import object.Relationship;
 import util.Constant;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +15,7 @@ public class ProjectManagement {
     // for evidence
     public static Map<Node, String> nodeStringMap = new HashMap<Node, String>();
 
-
+    public static ArrayList<Node> openNodes = new ArrayList<>();
+    public static ArrayList<Relationship> openRelationships = new ArrayList<>();
 
 }

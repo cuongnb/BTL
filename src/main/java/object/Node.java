@@ -18,10 +18,10 @@ import java.util.List;
 public class Node implements Paintable {
     public BayesNode node;
     public String name;
-    public ArrayList<String> sOutcome;
+    public ArrayList<String> sOutcome = new ArrayList<>();
     public double[] outcomeValues;
-    public ArrayList<Node> nodeParent;
-    public ArrayList<Node> nodeChild;
+    public ArrayList<Node> nodeParent = new ArrayList<>();
+    public ArrayList<Node> nodeChild = new ArrayList<>();
     public Object[][] data;
     public String[] sColumns;
     public Color background = Color.WHITE;
@@ -150,39 +150,121 @@ public class Node implements Paintable {
 
     @Override
     public String toString() {
-        return "Node{" +
-                "node=" + node +
-                ", name='" + name + '\'' +
-                ", sOutcome=" + sOutcome + "\n" +
-                ", nodeParent=" + printParent() + "\n" +
-                ", nodeChild=" + printChild() + "\n" +
-                ", data=" + "\n" + printData() + "\n" +
-                ", sColumns=" + Arrays.toString(sColumns) + "\n" +
-                '}';
+        return "Node name=" + name + "\t" +
+                "sOutcome=" + printOutcome() + "\t" +
+                "nodeParent=" + printParent() + "\t" +
+                "nodeChild=" + printChild() + "\t" +
+                "data=" + " " + printData() + "\t" +
+                "sColumns=" + printColumns() + "\n";
+    }
+
+    public Node(String sNode) {
+        String[] field = sNode.split("\t");
+        String name = field[0].toString().split("name=").toString().trim();
+        String sOutcome = field[1].split("sOutcome=").toString().trim();
+        String nodeParent = field[2].split("sOutcome=").toString().trim();
+        String nodeChild = field[3].split("sOutcome=").toString().trim();
+        String data = field[4].split("sOutcome=").toString().trim();
+        String sColumns = field[5].split("sOutcome=").toString().trim();
+        this.name = name;
+
+        ArrayList<String> listOutcome = new ArrayList<>();
+        if (sOutcome.length() > 0) {
+            String[] outcomes = sOutcome.split("---");
+            for (String s : outcomes) {
+                listOutcome.add(s);
+            }
+        }
+        this.sOutcome = listOutcome;
+
+        ArrayList<Node> parent = new ArrayList<Node>();
+        if (sOutcome.length() > 0) {
+            String[] outcomes = sOutcome.split("---");
+            for (String s : outcomes) {
+                listOutcome.add(s);
+            }
+        }
+        this.nodeParent = parent;
+
+        ArrayList<Node> child = new ArrayList<Node>();
+        if (sOutcome.length() > 0) {
+            String[] outcomes = sOutcome.split("---");
+            for (String s : outcomes) {
+                listOutcome.add(s);
+            }
+        }
+        this.nodeChild = child;
+
+        String[] fieldColumns = sColumns.split("---");
+        String[] columns = new String[fieldColumns.length];
+        for (int i = 0; i < fieldColumns.length; i++) {
+            columns[i] = fieldColumns[i].toString().trim();
+        }
+        this.sColumns = columns;
+
+        Object[][] datas = new Object[listOutcome.size()][columns.length];
+        String[] fieldColumn = sColumns.split("------");
+        for (int m = 0; m < datas.length; m++) {
+            String[] fieldRow = sColumns.split("---");
+            for (int n = 0; n < datas[0].length; n++) {
+                datas[m][n] = fieldRow[n].toString().trim();
+            }
+        }
+        this.data = datas;
+
     }
 
 
+    public String printOutcome() {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(" ");
+        if (sOutcome.size() > 0) {
+            for (String s : sOutcome) {
+                buffer.append(s + "---");
+            }
+            buffer.replace(buffer.length() - 3, buffer.length(), "");
+        }
+        return buffer.toString();
+    }
+
+    public String printColumns() {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(" ");
+        try {
+            if (sColumns.length > 0) {
+                for (String s : sColumns) {
+                    buffer.append(s + "---");
+                }
+                buffer.replace(buffer.length() - 3, buffer.length(), "");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return buffer.toString();
+    }
+
     public String printParent() {
         StringBuffer buffer = new StringBuffer();
-        buffer.append("[ ");
+        buffer.append(" ");
         if (nodeParent.size() > 0) {
             for (Node node : nodeParent) {
-                buffer.append(node.name + " ");
+                buffer.append(node.name + "---");
             }
+            buffer.replace(buffer.length() - 3, buffer.length(), "");
         }
-        buffer.append(" ] ");
         return buffer.toString();
     }
 
     public String printChild() {
         StringBuffer buffer = new StringBuffer();
-        buffer.append("[ ");
+        buffer.append(" ");
         if (nodeChild.size() > 0) {
             for (Node node : nodeChild) {
-                buffer.append(node.name + " ");
+                buffer.append(node.name + "---");
             }
+            buffer.replace(buffer.length() - 3, buffer.length(), "");
         }
-        buffer.append(" ]");
         return buffer.toString();
     }
 
@@ -190,13 +272,14 @@ public class Node implements Paintable {
         StringBuffer buffer = new StringBuffer();
         if (data != null) {
             for (int m = 0; m < data.length; m++) {
-                for (int n = 1; n < data[0].length; n++) {
-                    buffer.append(data[m][n] + " ");
+                for (int n = 0; n < data[0].length; n++) {
+                    buffer.append(data[m][n] + "---");
                 }
-                buffer.append("\n");
+                buffer.append("---");
             }
+            buffer.replace(buffer.length() - 6, buffer.length(), "");
         } else {
-            return "[]";
+            return "";
         }
         return buffer.toString();
     }
