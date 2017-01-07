@@ -1,0 +1,9 @@
+Node name=a	sOutcome= T---F	nodeParent= 	nodeChild= b---c	data= T---0.8------F---0.2	sColumns= No.---Probabilities
+
+Node name=b	sOutcome= T---F	nodeParent= a	nodeChild= c	data= T---0.01---0.4------F---0.99---0.6	sColumns= No.---T---F
+
+Node name=c	sOutcome= T---F	nodeParent= a---b	nodeChild= 	data= T---0.99---0.8---0.9---0.0------F---0.01---0.2---0.1---1.0	sColumns= No.---T---F---T---F
+
+relationship: a---b
+relationship: a---c
+relationship: b---c

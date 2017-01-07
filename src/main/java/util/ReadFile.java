@@ -46,17 +46,17 @@ public class ReadFile {
                         }
                         if (flag) {
                             for (Node node : nodes) {
-                                if (nameNode[0].equals(node.name)) {
+                                if (nameNode[1].equals(node.name)) {
                                     child = node;
                                     flag = false;
                                     break;
                                 }
                             }
                             if (flag == false) {
-                                openRelationships.add(new Relationship(parent, child));
                                 parent.nodeChild.add(child);
                                 child.nodeParent.add(parent);
-                                System.out.println("add relationship success");
+                                openRelationships.add(new Relationship(parent, child));
+                                System.out.println("add relationship success" + " parent: " + parent.name + " child: " + child.name);
                             }
                         }
 
@@ -74,7 +74,8 @@ public class ReadFile {
                             }
                         }
 //                     Node name=a	sOutcome= true---false	nodeParent=
-//                     nodeChild= 	data= 0.8------0.2	sColumns= No.---Probabilities
+//                     nodeChild= 	data= 0.3---0.2---0.3---0.4---0.5---0.9------0.7---0.8---0.7---0.6---0.5---0.1
+//                     	sColumns= No.---Probabilities
                         String[] sColumns = fields[5].split("sColumns= ")[1].split("---");
                         String[] outcome = fields[1].split("sOutcome= ")[1].split("---");
                         ArrayList<String> sOutcome = new ArrayList<>();

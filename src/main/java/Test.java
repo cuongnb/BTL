@@ -18,7 +18,7 @@ public class Test {
     public static JunctionTreeBuilder builder = JunctionTreeBuilder.forHeuristic(new MinFillIn());
     public static JunctionTreeAlgorithm algo = new JunctionTreeAlgorithm();
 
-    public static void main(String[] args) {
+    public static void run(String[] args) {
         BayesNode a = net.createNode("a");
         a.addOutcomes("true", "false");
 //        String[] list = new String[2];

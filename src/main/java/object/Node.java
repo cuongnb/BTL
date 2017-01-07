@@ -272,7 +272,7 @@ public class Node implements Paintable {
         StringBuffer buffer = new StringBuffer();
         if (data != null) {
             for (int m = 0; m < data.length; m++) {
-                for (int n = 1; n < data[0].length; n++) {
+                for (int n = 0; n < data[0].length; n++) {
                     buffer.append(data[m][n] + "---");
                 }
                 buffer.append("---");

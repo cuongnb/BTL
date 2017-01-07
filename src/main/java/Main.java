@@ -36,6 +36,8 @@ public class Main extends JPanel implements ActionListener {
     public BayesNet net;
     IBayesInferer inferer;
 
+    boolean isOpen = false;
+
     public JunctionTreeBuilder builder = JunctionTreeBuilder.forHeuristic(new MinFillIn());
     public JunctionTreeAlgorithm algo = new JunctionTreeAlgorithm();
 
@@ -140,14 +142,6 @@ public class Main extends JPanel implements ActionListener {
                     } else if (snyc.contains(e.getPoint())) {
                         syn();
 
-                        JFrame f = new JFrame();
-
-                        f.add(new Main());
-                        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                        f.pack();
-                        f.setLocationRelativeTo(null);
-                        f.setVisible(true);
-
                     } else if (openModel.contains(e.getPoint())) {
                         String[] choices = {"Create new", "Open File"};
                         input = (String) JOptionPane.showInputDialog(null, "Choose now...",
@@ -160,6 +154,7 @@ public class Main extends JPanel implements ActionListener {
                         if (input.equals("Create new")) {
 
                         } else {
+                            isOpen = true;
                             Model model = new Model();
                             model.readFile(ProjectManagement.openNodes, ProjectManagement.openRelationships);
                         }
@@ -238,36 +233,38 @@ public class Main extends JPanel implements ActionListener {
             @Override
             public void mouseReleased(MouseEvent e) {
 //                System.out.println("Mouse Cursor Coordinates => X:" + e.getX() + " |Y:" + e.getY());
-                Node nodeStart = null;
-                Node nodeEnd = null;
-                if (pointStart != null && pointEnd != null) {
-                    for (Node p : nodes) {
-                        if (p.contains(pointStart)) {
+                if (!isOpen) {
+                    Node nodeStart = null;
+                    Node nodeEnd = null;
+                    if (pointStart != null && pointEnd != null) {
+                        for (Node p : nodes) {
+                            if (p.contains(pointStart)) {
 //                            System.out.println("point start");
-                            nodeStart = p;
-                        }
-                        if (p.contains(pointEnd)) {
+                                nodeStart = p;
+                            }
+                            if (p.contains(pointEnd)) {
 //                            System.out.println("pont end");
-                            nodeEnd = p;
-                        }
-                    }
-                    if (nodeEnd != null && nodeStart != null && nodeEnd != nodeStart) {
-                        relationships.add(new Relationship(nodeStart, nodeEnd));
-                        nodeStart.nodeChild.add(nodeEnd);
-                        nodeEnd.nodeParent.add(nodeStart);
-
-                        if (DEBUG) {
-                            for (Node node : nodeEnd.nodeParent) {
-                                System.out.println(node.name);
+                                nodeEnd = p;
                             }
                         }
+                        if (nodeEnd != null && nodeStart != null && nodeEnd != nodeStart) {
+                            relationships.add(new Relationship(nodeStart, nodeEnd));
+                            nodeStart.nodeChild.add(nodeEnd);
+                            nodeEnd.nodeParent.add(nodeStart);
 
+                            if (DEBUG) {
+                                for (Node node : nodeEnd.nodeParent) {
+                                    System.out.println(node.name);
+                                }
+                            }
+
+                        }
                     }
+                    addNode.setBackground(Color.WHITE);
+                    selectedShape = null;
+                    pointStart = null;
+                    pointEnd = null;
                 }
-                addNode.setBackground(Color.WHITE);
-                selectedShape = null;
-                pointStart = null;
-                pointEnd = null;
                 repaint();
             }
         });
