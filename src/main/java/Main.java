@@ -139,6 +139,15 @@ public class Main extends JPanel implements ActionListener {
                         model.save(nodes, relationships, name);
                     } else if (snyc.contains(e.getPoint())) {
                         syn();
+
+                        JFrame f = new JFrame();
+
+                        f.add(new Main());
+                        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                        f.pack();
+                        f.setLocationRelativeTo(null);
+                        f.setVisible(true);
+
                     } else if (openModel.contains(e.getPoint())) {
                         String[] choices = {"Create new", "Open File"};
                         input = (String) JOptionPane.showInputDialog(null, "Choose now...",
@@ -364,12 +373,15 @@ public class Main extends JPanel implements ActionListener {
 
     private void syn() {
         nodes = new ArrayList<>();
+        relationships = new ArrayList<>();
+        repaint();
         for (Node node : ProjectManagement.openNodes) {
             nodes.add(node);
+            repaint();
         }
-        relationships = new ArrayList<>();
         for (Relationship relationship : ProjectManagement.openRelationships) {
             relationships.add(relationship);
+            repaint();
         }
     }
 
