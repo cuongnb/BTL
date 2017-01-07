@@ -1,4 +1,0 @@
-Node name=a	sOutcome=[1, 2]	nodeParent=[  ] 	nodeChild=[ b ]	data= 0.9---+++0.1	sColumns=[No., Probabilities]
-
-Node name=b	sOutcome=[a, b]	nodeParent=[ a ] 	nodeChild=[  ]	data= 0.8---0.6---+++0.2---0.4	sColumns=[No., 1, 2]
-

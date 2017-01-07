@@ -46,6 +46,7 @@ public class Main extends JPanel implements ActionListener {
     AddNode evidence = new AddNode("Evidence", 290, 10, Color.BLUE);
     AddNode saveModel = new AddNode("Save Model", 360, 10, Color.BLUE);
     AddNode openModel = new AddNode("Open Model", 430, 10, Color.BLUE);
+    AddNode snyc = new AddNode("SNYC", 500, 10, Color.BLUE);
 
     public boolean isRun = false;
 
@@ -65,6 +66,7 @@ public class Main extends JPanel implements ActionListener {
         controls.add(evidence);
         controls.add(saveModel);
         controls.add(openModel);
+        controls.add(snyc);
 
         this.setFont(baseFont);
         this.addMouseListener(new MouseAdapter() {
@@ -134,7 +136,9 @@ public class Main extends JPanel implements ActionListener {
                         // prompt the user to enter their name
                         String name = JOptionPane.showInputDialog(frame, "Model name?");
                         Model model = new Model();
-                        model.save(nodes, name);
+                        model.save(nodes, relationships, name);
+                    } else if (snyc.contains(e.getPoint())) {
+                        syn();
                     } else if (openModel.contains(e.getPoint())) {
                         String[] choices = {"Create new", "Open File"};
                         input = (String) JOptionPane.showInputDialog(null, "Choose now...",
@@ -148,7 +152,7 @@ public class Main extends JPanel implements ActionListener {
 
                         } else {
                             Model model = new Model();
-                            model.readFile(nodes);
+                            model.readFile(ProjectManagement.openNodes, ProjectManagement.openRelationships);
                         }
                     }
 
@@ -356,6 +360,17 @@ public class Main extends JPanel implements ActionListener {
 
     private void getPoint() {
         // TODO: 11/18/16 change position for arrow
+    }
+
+    private void syn() {
+        nodes = new ArrayList<>();
+        for (Node node : ProjectManagement.openNodes) {
+            nodes.add(node);
+        }
+        relationships = new ArrayList<>();
+        for (Relationship relationship : ProjectManagement.openRelationships) {
+            relationships.add(relationship);
+        }
     }
 
 }

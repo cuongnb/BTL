@@ -18,10 +18,10 @@ import java.util.List;
 public class Node implements Paintable {
     public BayesNode node;
     public String name;
-    public ArrayList<String> sOutcome;
+    public ArrayList<String> sOutcome = new ArrayList<>();
     public double[] outcomeValues;
-    public ArrayList<Node> nodeParent;
-    public ArrayList<Node> nodeChild;
+    public ArrayList<Node> nodeParent = new ArrayList<>();
+    public ArrayList<Node> nodeChild = new ArrayList<>();
     public Object[][] data;
     public String[] sColumns;
     public Color background = Color.WHITE;

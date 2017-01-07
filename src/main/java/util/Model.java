@@ -1,6 +1,7 @@
 package util;
 
 import object.Node;
+import object.Relationship;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -12,11 +13,14 @@ import java.util.ArrayList;
  */
 public class Model extends JFrame {
 
-    public void save(ArrayList<Node> nodes, String name) {
+    public void save(ArrayList<Node> nodes, ArrayList<Relationship> relationships, String name) {
         try {
             PrintWriter writer = new PrintWriter(name);
             for (Node node : nodes) {
                 writer.println(node.toString());
+            }
+            for (Relationship relationship : relationships) {
+                writer.println("relationship: " + relationship.parent.name + "---" + relationship.child.name);
             }
             writer.close();
         } catch (IOException e) {
@@ -24,7 +28,7 @@ public class Model extends JFrame {
         }
     }
 
-    public void readFile(ArrayList<Node> nodes) {
+    public void readFile(ArrayList<Node> nodes, ArrayList<Relationship> openRelationships) {
         JFileChooser c = new JFileChooser();
         // Demonstrate "Open" dialog:
         int rVal = c.showOpenDialog(Model.this);
@@ -32,7 +36,7 @@ public class Model extends JFrame {
             String filename = c.getCurrentDirectory().toString() + "/" + c.getSelectedFile().getName();
             System.out.println(filename);
             ReadFile readFile = new ReadFile();
-            readFile.run(filename, nodes);
+            readFile.run(filename, nodes, openRelationships);
         }
     }
 
