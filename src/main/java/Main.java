@@ -37,6 +37,7 @@ public class Main extends JPanel implements ActionListener {
     IBayesInferer inferer;
 
     boolean isOpen = false;
+    boolean isRanked = false;
 
     public JunctionTreeBuilder builder = JunctionTreeBuilder.forHeuristic(new MinFillIn());
     public JunctionTreeAlgorithm algo = new JunctionTreeAlgorithm();
@@ -49,6 +50,7 @@ public class Main extends JPanel implements ActionListener {
     AddNode saveModel = new AddNode("Save Model", 360, 10, Color.BLUE);
     AddNode openModel = new AddNode("Open Model", 430, 10, Color.BLUE);
     AddNode snyc = new AddNode("SNYC", 500, 10, Color.BLUE);
+    AddNode ranked = new AddNode("Ranked", 570, 10, Color.BLUE);
 
     public boolean isRun = false;
 
@@ -69,6 +71,7 @@ public class Main extends JPanel implements ActionListener {
         controls.add(saveModel);
         controls.add(openModel);
         controls.add(snyc);
+        controls.add(ranked);
 
         this.setFont(baseFont);
         this.addMouseListener(new MouseAdapter() {
@@ -142,6 +145,14 @@ public class Main extends JPanel implements ActionListener {
                     } else if (snyc.contains(e.getPoint())) {
                         syn();
 
+                    } else if (ranked.contains(e.getPoint())) {
+                        if (isRanked) {
+                            ranked.setBackground(Color.BLUE);
+                            isRanked = false;
+                        } else {
+                            ranked.setBackground(Color.RED);
+                            isRanked = true;
+                        }
                     } else if (openModel.contains(e.getPoint())) {
                         String[] choices = {"Create new", "Open File"};
                         input = (String) JOptionPane.showInputDialog(null, "Choose now...",
@@ -191,12 +202,25 @@ public class Main extends JPanel implements ActionListener {
                                 }
                             }
 
-                            ListControl listControl = new ListControl(e.getLocationOnScreen(), isRun);
-                            listControl.setLocation(e.getLocationOnScreen());
-                            listControl.setSize(200, 200);
-                            listControl.setResizable(true);
-                            listControl.pack();
-                            listControl.setVisible(true);
+                            if (isRanked) {
+
+                                SelectRank selectRank = new SelectRank(e.getLocationOnScreen());
+                                selectRank.setLocation(e.getLocationOnScreen());
+                                selectRank.setSize(200, 200);
+                                selectRank.setResizable(true);
+                                selectRank.pack();
+                                selectRank.setVisible(true);
+
+
+                            } else {
+                                ListControl listControl = new ListControl(e.getLocationOnScreen(), isRun);
+                                listControl.setLocation(e.getLocationOnScreen());
+                                listControl.setSize(200, 200);
+                                listControl.setResizable(true);
+                                listControl.pack();
+                                listControl.setVisible(true);
+                            }
+
                             break;
                         }
                     }

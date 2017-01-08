@@ -29,6 +29,7 @@ public class ListControl extends JFrame
 
         if (isRun) {
             listModel.addElement("....");
+            listModel.addElement("View result");
             listModel.addElement("View probabilities");
         } else {
             listModel.addElement("Select Option");
@@ -81,6 +82,11 @@ public class ListControl extends JFrame
                     ViewNode frame = new ViewNode(ProjectManagement.currentNode);
                     frame.setVisible(true);
                     break;
+                case 2:
+                    Table table = new Table(ProjectManagement.currentNode);
+                    table.setLocation(point);
+                    table.setVisible(true);
+                    break;
             }
         } else {
 
@@ -127,12 +133,12 @@ public class ListControl extends JFrame
 //                            evidence.setVisible(true);
 //                        }
 //                    } else {
-                        AddOutcome addOutcome = new AddOutcome();
-                        addOutcome.setLocation(point);
-                        addOutcome.setSize(100, 100);
-                        addOutcome.setResizable(true);
-                        addOutcome.pack();
-                        addOutcome.setVisible(true);
+                    AddOutcome addOutcome = new AddOutcome();
+                    addOutcome.setLocation(point);
+                    addOutcome.setSize(100, 100);
+                    addOutcome.setResizable(true);
+                    addOutcome.pack();
+                    addOutcome.setVisible(true);
 //                    }
 
 
